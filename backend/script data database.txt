@@ -1,0 +1,12 @@
+INSERT INTO `gambatte_db`.`rol`
+(`role`)
+VALUES
+(
+"Admin"),("User");
+
+INSERT INTO `gambatte_db`.`document_type`
+(`iddocument_type`,
+`description`)
+VALUES
+(1,
+'CC'),(2,'NIT');
