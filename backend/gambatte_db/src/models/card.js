@@ -8,19 +8,19 @@ module.exports = function(sequelize, DataTypes) {
       primaryKey: true
     },
     cardNumber: {
-      type: DataTypes.STRING(600),
+      type: DataTypes.STRING(300),
       allowNull: true
     },
     ccv: {
-      type: DataTypes.STRING(600),
+      type: DataTypes.STRING(300),
       allowNull: true
     },
     expYear: {
-      type: DataTypes.STRING(600),
+      type: DataTypes.STRING(300),
       allowNull: true
     },
     month: {
-      type: DataTypes.STRING(600),
+      type: DataTypes.STRING(300),
       allowNull: true
     },
     termAndConditions: {

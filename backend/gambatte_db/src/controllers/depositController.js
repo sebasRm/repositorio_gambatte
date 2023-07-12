@@ -50,13 +50,13 @@ async function createDeposit(req, res) {
 
     cards = await initModel.deposit.create({
       amount: req.deposit.amount,
-      date: req.deposit.depositDate,
+      depositDate: req.deposit.depositDate,
       ecommerce: req.deposit.ecommerce,
-      status: req.deposit.state,
+      state: req.deposit.state,
       account_idaccount: user.dataValues.account_idaccount,
     });
     if (cards) {
-      return response("Deposito creado con exito", 201, res, "ok", []);
+      return response("Depósito creado con exito", 201, res, "ok", cards);
     } else {
       return response("Error al crear el deposito", 400, res, "false", []);
     }
@@ -67,17 +67,24 @@ async function createDeposit(req, res) {
 
 async function searchDeposit(req, res) {
   try {
-    const { account_idaccount, despositDate } = req.query;
+    const { userId } = req.params;
+
+    let user = await initModel.user.findOne({
+      where: {
+        id: userId , 
+      },
+    });
+
     let deposits = await initModel.deposit.findAll({
       where: {
-        account_idaccount: account_idaccount,
-        date: { [Op.startsWith]: despositDate },
+        account_idaccount: user.dataValues.account_idaccount,
+        //date: { [Op.startsWith]: despositDate },
       },
     });
     if (deposits) {
       let responses = response(
         "desositos del usuario",
-        201,
+        200,
         res,
         "ok",
         deposits

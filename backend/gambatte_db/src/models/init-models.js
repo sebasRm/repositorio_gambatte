@@ -37,7 +37,7 @@ function initModels(sequelize) {
   user.belongsTo(rol, { as: "rol_", foreignKey: "rol_idrol"});
   rol.hasMany(user, { as: "users", foreignKey: "rol_idrol"});
   buy_services.belongsTo(user, { as: "user_", foreignKey: "user_login_id"});
-  user.hasMany(buy_services, { as: "buy_services", foreignKey: "user_login_id"});
+  user.hasMany(buy_services, { as: "buy_", foreignKey: "user_login_id"});
   card.belongsTo(user, { as: "user_", foreignKey: "user_login_id"});
   user.hasMany(card, { as: "cards", foreignKey: "user_login_id"});
   transaction.belongsTo(user, { as: "user_", foreignKey: "user_login_id"});

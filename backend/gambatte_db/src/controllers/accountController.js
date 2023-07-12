@@ -6,6 +6,13 @@ let initModel = initModels(sequelize);
 /**
  * Función para consultar el abalance del usuario
  */
+/**
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+
 async function searchBalance(req, res) {
     const { userId } = req.params;
     try {

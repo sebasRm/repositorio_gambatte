@@ -11,11 +11,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DOUBLE,
       allowNull: true
     },
-    date: {
+    expensesDate: {
       type: DataTypes.DATEONLY,
       allowNull: true
     },
-    status: {
+    state: {
       type: DataTypes.INTEGER,
       allowNull: true
     },

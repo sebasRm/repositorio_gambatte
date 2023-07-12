@@ -9,7 +9,8 @@ module.exports = function(sequelize, DataTypes) {
     },
     balance: {
       type: DataTypes.DOUBLE,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     }
   }, {
     sequelize,

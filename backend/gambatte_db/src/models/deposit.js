@@ -15,11 +15,11 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(45),
       allowNull: true
     },
-    date: {
+    depositDate: {
       type: DataTypes.DATEONLY,
       allowNull: true
     },
-    status: {
+    state: {
       type: DataTypes.INTEGER,
       allowNull: true
     },
