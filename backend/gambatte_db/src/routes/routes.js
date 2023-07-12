@@ -19,7 +19,7 @@ const router = express.Router();
 router.get('/api/account/:userId', controllerAccount.searchBalance);  
 
 //            =====>Petición para consultar depositos del usuario
-router.get('/api/deposit', controllerDeposit.searchDeposit);  
+router.get('/api/deposit/:userId', controllerDeposit.searchDeposit);  
 
 //            =====>Petición para consultar usuario por ID
 router.get('/api/user/id', controllerUser.findUser);  

@@ -65,8 +65,9 @@ async function createUser(req, res) {
             },
           ],
         });
-        console.log("user", user);
         delete user[0].dataValues.password;
+        user[0].dataValues.role = user[0].dataValues.rol_.dataValues.role;
+        delete user[0].dataValues.rol_
         if (user) {
           let responses = response(
             STATICVAR.USER_REGISTER_SUCCESSFUL,
