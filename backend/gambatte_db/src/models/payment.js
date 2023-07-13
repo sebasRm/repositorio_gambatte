@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('payment', {
-    idpayment: {
+    idPayment: {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -36,7 +36,7 @@ module.exports = function(sequelize, DataTypes) {
         unique: true,
         using: "BTREE",
         fields: [
-          { name: "idpayment" },
+          { name: "idPayment" },
         ]
       },
       {
