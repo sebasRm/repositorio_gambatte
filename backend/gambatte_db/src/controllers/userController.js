@@ -41,6 +41,7 @@ async function createUser(req, res) {
       if (userExist.length == 0) {
         const password = await bcrypt.hash(req.user.password, 10);
         account = await initModel.account.create({});
+    
         userCreate = await initModel.user.create({
           idUser: idUser,
           fullName: req.user.fullName,
@@ -48,7 +49,7 @@ async function createUser(req, res) {
           phone: req.user.phone,
           password: password,
           rol_idrol: 2,
-          account_idaccount: account.dataValues.idaccount,
+          account_idaccount: account.dataValues.idAccount,
           termsAndConditions: req.user.termAndConditions,
           registerStatus: true,
           status: false,
@@ -323,9 +324,8 @@ async function updateAvatarUserLogin(req, res) {
 async function updateUserLogin(req, res) {
   try {
     const { id, fullName, secondName, email, phone, documentNumber } =
-      req.query;
-    let { documentType } = req.query;
-    console.log("documentType", documentType);
+      req.params;
+    let { documentType } = req.params;
     documentType == "CC" ? (documentType = 1) : (documentType = 2);
     let data = {
       fullName: fullName,
@@ -340,7 +340,7 @@ async function updateUserLogin(req, res) {
     });
     if (user) {
       let responses = response(
-        "usuario actualizado exitosamente",
+        "Usuario actualizado exitosamente",
         200,
         res,
         "ok",

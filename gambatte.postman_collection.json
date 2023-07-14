@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"data\":\r\n        {\r\n            \"user\":{\r\n                \"email\":\"samuel@gmail.com\",\r\n                \"password\":\"123\"\r\n            }\r\n        }\r\n    \r\n}",
+							"raw": "{\r\n    \"data\":\r\n        {\r\n            \"user\":{\r\n                \"email\":\"sebas124@bancolombia.com.co\",\r\n                \"password\":\"123456\"\r\n            }\r\n        }\r\n    \r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -75,7 +75,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"data\": \r\n    {\r\n      \"user\": {\r\n        \"fullName\": \"Sebastian Ricardo\",\r\n        \"email\": \"sebas12sa85a9asd@bancolombia.com.co\",\r\n        \"phone\": \"3053028411\",\r\n        \"password\": \"123456\",\r\n        \"termsAndConditions\": true\r\n      }\r\n    }\r\n  \r\n}\r\n",
+							"raw": "{\r\n  \"data\": \r\n    {\r\n      \"user\": {\r\n        \"fullName\": \"Sebastian Ricardo\",\r\n        \"email\": \"sebas1234@bancolombia.com.co\",\r\n        \"phone\": \"3053028411\",\r\n        \"password\": \"123456\",\r\n        \"termAndConditions\": true\r\n      }\r\n    }\r\n  \r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -211,7 +211,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/api/user/update?id=12&fullName=Sebastian Ricardo Montenegro&email=semontene@bancolombia.com.co&phone=3053025411&documentNumber=documentNumber&documentType=CC",
+							"raw": "http://localhost:4000/api/user/update/1/Sebastian Ricardo Montenegro/semontene@bancolombia.com.co/3053025411/1193384242/CC",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -220,33 +220,13 @@
 							"path": [
 								"api",
 								"user",
-								"update"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "12"
-								},
-								{
-									"key": "fullName",
-									"value": "Sebastian Ricardo Montenegro"
-								},
-								{
-									"key": "email",
-									"value": "semontene@bancolombia.com.co"
-								},
-								{
-									"key": "phone",
-									"value": "3053025411"
-								},
-								{
-									"key": "documentNumber",
-									"value": "documentNumber"
-								},
-								{
-									"key": "documentType",
-									"value": "CC"
-								}
+								"update",
+								"1",
+								"Sebastian Ricardo Montenegro",
+								"semontene@bancolombia.com.co",
+								"3053025411",
+								"1193384242",
+								"CC"
 							]
 						}
 					},
@@ -370,7 +350,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:4000/api/deposit?account_idaccount=1",
+							"raw": "http://localhost:4000/api/deposit/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -378,13 +358,37 @@
 							"port": "4000",
 							"path": [
 								"api",
-								"deposit"
+								"deposit",
+								"1"
 							],
 							"query": [
 								{
-									"key": "account_idaccount",
-									"value": "1"
+									"key": "despositDate",
+									"value": "2023-06-06",
+									"disabled": true
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api-deposit-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/deposit/id/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"deposit",
+								"id",
+								"2"
 							]
 						}
 					},

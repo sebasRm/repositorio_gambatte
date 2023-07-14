@@ -42,8 +42,8 @@ async function createDeposit(req, res) {
         user_login_id: req.user.id,
       }));
 
-    //cards.map(async(card)=>{ cardExits = await bcrypt.compare(req[0].cardInfo.cardNumber, card.dataValues.cardNumber)})
-
+   // let testCard = cards.map(async(card)=>{return cardExits = await bcrypt.compare(req.cardInfo.cardNumber, card.dataValues.cardNumber)})
+    //  console.log("testCard", testCard)
     user = await initModel.user.findOne({
       where: { id: req.user.id },
     });
@@ -58,14 +58,14 @@ async function createDeposit(req, res) {
     if (cards) {
       return response("Depósito creado con exito", 201, res, "ok", cards);
     } else {
-      return response("Error al crear el deposito", 400, res, "false", []);
+      return response("Error al crear el depósito", 400, res, "false", []);
     }
   } catch (error) {
     console.log(error);
   }
 }
 
-async function searchDeposit(req, res) {
+async function findDepositByIdUser(req, res) {
   try {
     const { userId } = req.params;
 
@@ -83,7 +83,7 @@ async function searchDeposit(req, res) {
     });
     if (deposits) {
       let responses = response(
-        "desositos del usuario",
+        "Desósitos del usuario",
         200,
         res,
         "ok",
@@ -92,7 +92,7 @@ async function searchDeposit(req, res) {
       return responses;
     } else {
       let responses = response(
-        "Error al buscar los depositos",
+        "Error al buscar los depósitos",
         400,
         res,
         "false",
@@ -105,7 +105,43 @@ async function searchDeposit(req, res) {
   }
 }
 
+async function findDepositById(req, res) {
+  try {
+    const { idDeposit } = req.params;
+
+    let deposits = await initModel.deposit.findOne({
+      where: {
+        idDeposit:idDeposit
+      },
+    });
+
+    if (deposits) {
+      let responses = response(
+        "Desósito del usuario",
+        200,
+        res,
+        "ok",
+        deposits
+      );
+      return responses;
+    } else {
+      let responses = response(
+        "Error al buscar el depósito",
+        400,
+        res,
+        "false",
+        []
+      );
+      return responses;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
 module.exports = {
   createDeposit,
-  searchDeposit,
+  findDepositByIdUser,
+  findDepositById
 };
