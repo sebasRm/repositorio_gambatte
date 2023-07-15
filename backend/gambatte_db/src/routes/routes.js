@@ -2,6 +2,7 @@ const express = require("express");
 const controllerUser= require('../controllers/userController');
 const controllerAccount= require('../controllers/accountController');
 const controllerDeposit= require('../controllers/depositController');
+const controllerExpenses= require('../controllers/expensesController');
 const upload = require("../libs/storange");
 
 
@@ -21,6 +22,14 @@ router.get('/api/account/:userId', controllerAccount.searchBalance);
 //            =====>Petición para consultar depositos del usuario
 router.get('/api/deposit/:userId', controllerDeposit.findDepositByIdUser);  
 
+//            =====>Petición para consultar retiros del usuario
+router.get('/api/expenses/:userId', controllerExpenses.findExpensesByUserId);  
+
+
+//            =====>Petición para consultar retiros por id del retiro
+router.get('/api/expenses/id/:idExpenses', controllerExpenses.findExpensesById);  
+
+
 
 //            =====>Petición para consultar un  depositos del usuario
 router.get('/api/deposit/id/:idDeposit', controllerDeposit.findDepositById);
@@ -36,6 +45,10 @@ router.get('/api/user', controllerUser.findUsers);
 
 //            =====>Petición para crear usuario
 router.post('/api/user', controllerUser.createUser);  
+
+//            =====>Petición para crear expenses
+router.post('/api/expenses', controllerExpenses.createExpenses);  
+
 //            =====> Petición para logear usuario
 router.post('/api/user/login', controllerUser.userLogin);  
 //            =====>Petición para cerrar sesión de usuario
