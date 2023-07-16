@@ -17,7 +17,9 @@ const router = express.Router();
 
 /** *************************  PETICIONES GET   **************************/
 //            =====>Petición para consultar el balance de un usuario
-router.get('/api/account/:userId', controllerAccount.searchBalance);  
+router.get('/api/account/:userId', controllerAccount.searchBalance); 
+
+
 
 //            =====>Petición para consultar depositos del usuario
 router.get('/api/deposit/:userId', controllerDeposit.findDepositByIdUser);  
@@ -46,6 +48,9 @@ router.get('/api/user', controllerUser.findUsers);
 //            =====>Petición para crear usuario
 router.post('/api/user', controllerUser.createUser);  
 
+//            =====>Petición para consultar el balance de un usuario
+router.post('/api/validate/email', controllerUser.validateEmail); 
+
 //            =====>Petición para crear expenses
 router.post('/api/expenses', controllerExpenses.createExpenses);  
 
@@ -71,8 +76,10 @@ router.put('/api/user/updatePassword', controllerUser.updatePasswordUserLogin);
 router.put('/api/user/updateAvatar', upload.single('avatar'), controllerUser.updateAvatarUserLogin);  
 
 //            =====>Petición para actualizar datos generales de usuario
-router.put('/api/user/update/:id/:fullName/:email/:phone/:documentNumber/:documentType', controllerUser.updateUserLogin);  
+router.put('/api/user/update/:id', controllerUser.updateUserLogin);  
 
+
+router.put('/api/user/finishRegister/:userId', controllerUser.updateFinishRegisterUser); 
 
 
 

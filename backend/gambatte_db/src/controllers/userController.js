@@ -323,28 +323,35 @@ async function updateAvatarUserLogin(req, res) {
 
 async function updateUserLogin(req, res) {
   try {
-    const { id, fullName, secondName, email, phone, documentNumber } =
+    const { id } =
       req.params;
-    let { documentType } = req.params;
+      const { fullName,  email, phone, documentNumber } =
+      req.body.data.user;
+    let { documentType } = req.body.data.user;
     documentType == "CC" ? (documentType = 1) : (documentType = 2);
     let data = {
       fullName: fullName,
-      secondName: secondName,
       email: email,
       phone: phone,
       documentNumber: documentNumber,
       document_type_iddocument_type: documentType,
+      finishRegister:true
     };
-    const user = await initModel.user.update(data, {
+    await initModel.user.update(data, {
       where: { id: id },
     });
+
+    let user = await initModel.user.findOne( {
+      where: { id: id },
+    });
+    delete user.dataValues.password
     if (user) {
       let responses = response(
         "Usuario actualizado exitosamente",
         200,
         res,
         "ok",
-        []
+        user
       );
       return responses;
     } else {
@@ -361,6 +368,50 @@ async function updateUserLogin(req, res) {
     throw(STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
   }
 }
+
+/**
+ * Función para actualizar datos generales de un usuario
+ */
+
+async function updateFinishRegisterUser(req, res) {
+  try {
+    const { userId } =
+      req.params;
+    let data = {
+      finishRegister:true
+    };
+    await initModel.user.update(data, {
+      where: { id: userId },
+    });
+
+    let user = await initModel.user.findOne( {
+      where: { id: userId },
+    });
+    delete user.dataValues.password
+    if (user) {
+      let responses = response(
+        "Usuario actualizado exitosamente",
+        200,
+        res,
+        "ok",
+        user
+      );
+      return responses;
+    } else {
+      let responses = response(
+        "Error al actualizar datos del usuario",
+        400,
+        res,
+        false,
+        []
+      );
+      return responses;
+    }
+  } catch (error) {
+    throw(STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
+  }
+}
+
 
 async function findUser(req, res) {
   try {
@@ -396,6 +447,31 @@ async function findUsers(req, res) {
   }
 }
 
+async function validateEmail(req, res) {
+  try {
+    const {email, id} = req.body;
+    if(email)
+    {
+      
+      const emailExist = await initModel.user.findOne({where:{email:email }});
+      if (emailExist) {
+        let responses = response("Error el email ya se encuentra registrado para este usuario", 200, res, false, {email:email});
+        return responses;
+      } else {
+        let responses = response("El email es valido", 200, res, "ok", {email:false});
+        return responses;
+      }
+    }
+    else{
+      let responses = response("email invalido", 400, res, false, []);
+      return responses;
+    }
+    
+  } catch (error) {
+    throw(error);
+  }
+}
+
 module.exports = {
   userLogin,
   userLogout,
@@ -406,4 +482,6 @@ module.exports = {
   updateUserLogin,
   findUser,
   findUsers,
+  updateFinishRegisterUser,
+  validateEmail
 };
