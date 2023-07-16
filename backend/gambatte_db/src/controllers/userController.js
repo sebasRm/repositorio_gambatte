@@ -102,7 +102,7 @@ async function createUser(req, res) {
       createUser(req, res);
     }
   } catch (error) {
-    console.log(STATICVAR.USER_CREATE_ERROR, error);
+    throw (STATICVAR.USER_CREATE_ERROR, error);
   }
 }
 
@@ -166,7 +166,7 @@ async function userLogin(req, res) {
       return responses;
     }
   } catch (error) {
-    console.log(STATICVAR.user_ERROR_METHOD, error);
+    throw(STATICVAR.user_ERROR_METHOD, error);
   }
 }
 
@@ -190,7 +190,7 @@ async function userLogout(req, res) {
     let responses = response(STATICVAR.user_ERROR, 400, res, false, []);
     return responses;
   } catch (error) {
-    console.log(STATICVAR.USER_LOGOUT_ERROR_METHOD, error);
+    throw(STATICVAR.USER_LOGOUT_ERROR_METHOD, error);
   }
 }
 
@@ -224,7 +224,7 @@ async function deleteUserLogin(req, res) {
       return responses;
     }
   } catch (error) {
-    console.log(STATICVAR.USER_DELETE_USER_ERROR_METHOD, error);
+    throw(STATICVAR.USER_DELETE_USER_ERROR_METHOD, error);
   }
 }
 
@@ -255,7 +255,7 @@ async function updatePasswordUserLogin(req, res) {
     let responses = response(STATICVAR.USER_UPDATE_ERROR, 400, res, false, []);
     return responses;
   } catch (error) {
-    console.log(STATICVAR.USER_UPDATE_ERROR_METHOD, error);
+    throw(STATICVAR.USER_UPDATE_ERROR_METHOD, error);
   }
 }
 
@@ -313,7 +313,7 @@ async function updateAvatarUserLogin(req, res) {
       return responses;
     }
   } catch (error) {
-    console.log(STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
+    throw(STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
   }
 }
 
@@ -358,7 +358,7 @@ async function updateUserLogin(req, res) {
       return responses;
     }
   } catch (error) {
-    console.log(STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
+    throw(STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
   }
 }
 
@@ -392,7 +392,7 @@ async function findUsers(req, res) {
       return responses;
     }
   } catch (error) {
-    console.log(STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
+    throw(STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
   }
 }
 

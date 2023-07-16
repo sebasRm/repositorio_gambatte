@@ -203,7 +203,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "",
+							"raw": "{\r\n    \"data\":\r\n    {\r\n        \"user\":{\r\n            \"fullName\":\"Samuel Moreno\",\r\n            \"email\":\"samuel@gmail.com\",\r\n            \"phone\":\"3159841\",\r\n            \"documentNumber\":\"1668844226\",\r\n            \"documentType\":\"CC\"\r\n        }\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -211,7 +211,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/api/user/update/1/Sebastian Ricardo Montenegro/semontene@bancolombia.com.co/3053025411/1193384242/CC",
+							"raw": "http://localhost:4000/api/user/update/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -221,12 +221,7 @@
 								"api",
 								"user",
 								"update",
-								"1",
-								"Sebastian Ricardo Montenegro",
-								"semontene@bancolombia.com.co",
-								"3053025411",
-								"1193384242",
-								"CC"
+								"1"
 							]
 						}
 					},
@@ -274,6 +269,58 @@
 							"path": [
 								"api",
 								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api-user-finish-register",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/user/finishRegister/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"user",
+								"finishRegister",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api-validate-email",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n        \"email\": \"samuel@gmail.com\"\r\n      }\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/validate/email",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"validate",
+								"email"
 							]
 						}
 					},
@@ -389,6 +436,83 @@
 								"deposit",
 								"id",
 								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "modulo_expenses",
+			"item": [
+				{
+					"name": "api-expenses",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\":\r\n        { \r\n            \"expenses\":{\r\n                \"bank\":\"Bancolombia\",\r\n                \"keyAccount\":\"20236555\",\r\n                \"amount\":1300000,\r\n                \"swiftCode\":\"1254\"\r\n            },\r\n            \"user\":{\r\n                \"email\":\"yirleison@bancolombia.com.co\",\r\n                \"fullName\":\"Samuel Moreno\",\r\n                \"id\":4\r\n            }\r\n        }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/expenses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"expenses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api-expenses",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/expenses/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"expenses",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api-expenses-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/expenses/id/8",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"expenses",
+								"id",
+								"8"
 							]
 						}
 					},

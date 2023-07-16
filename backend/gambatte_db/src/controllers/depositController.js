@@ -32,6 +32,8 @@ async function createDeposit(req, res) {
       );
     }
 
+
+
     cardExits == false &&
       (await initModel.card.create({
         cardNumber: numberCard,
@@ -48,20 +50,36 @@ async function createDeposit(req, res) {
       where: { id: req.user.id },
     });
 
-    cards = await initModel.deposit.create({
+    let deposit = await initModel.deposit.create({
       amount: req.deposit.amount,
       depositDate: req.deposit.depositDate,
       ecommerce: req.deposit.ecommerce,
       state: req.deposit.state,
       account_idaccount: user.dataValues.account_idaccount,
     });
-    if (cards) {
-      return response("Depósito creado con exito", 201, res, "ok", cards);
+    let fullName ={
+      fullName: req.user.fullName
+    }
+    user = await initModel.user.update(fullName,{
+      where: { id: req.user.id },
+    });
+
+    user = await initModel.user.findOne({
+      where: { id: req.user.id },
+    });
+    delete user.dataValues.password
+
+    if (deposit) {
+      let responses
+  
+        responses=   response("Depósito creado con exito", 201, res, "ok", {deposit:deposit, user:user.dataValues});
+
+      return responses
     } else {
       return response("Error al crear el depósito", 400, res, "false", []);
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }
 
@@ -82,14 +100,19 @@ async function findDepositByIdUser(req, res) {
       },
     });
     if (deposits) {
-      let responses = response(
-        "Desósitos del usuario",
-        200,
-        res,
-        "ok",
-        deposits
-      );
-      return responses;
+      let responses
+      setTimeout(() => {
+        responses=   response(
+          "Desósitos del usuario",
+          200,
+          res,
+          "ok",
+          deposits
+        );
+      }, 1000);
+   
+      
+      return  responses;
     } else {
       let responses = response(
         "Error al buscar los depósitos",
@@ -101,7 +124,7 @@ async function findDepositByIdUser(req, res) {
       return responses;
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }
 
@@ -135,7 +158,7 @@ async function findDepositById(req, res) {
       return responses;
     }
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 }
 
