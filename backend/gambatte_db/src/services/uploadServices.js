@@ -8,6 +8,7 @@ const STATICVAR = require("../helpers/utils").staticVar;
 const { response } = require('../helpers/utils');
 
 const uploapFile = (req, res) => {
+
     let img = null
     if (!req.files) {
         return res.status(400).send(
@@ -18,6 +19,7 @@ const uploapFile = (req, res) => {
                 }
             });
     }
+
     img = req.files.image
 
     let ext_file = ['png', 'PNG', 'jpg', 'JPG', 'jpge', 'jpeg', 'mpge', 'mpg', 'gif'];
