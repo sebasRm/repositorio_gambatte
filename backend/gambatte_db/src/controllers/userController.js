@@ -6,11 +6,14 @@ const randomIdUser = require("../helpers/utils").generateRandomIdUser;
 const { generateToken } = require("../helpers/utils");
 /// singleton implementar
 
+// organizar la ortografia en los comentarios
 /// dioccionaro de mensajes y errores
 let initModel = initModels(sequelize);
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const fs = require("fs");
+const { findUserByIdService } = require("../services/userService");
+const { deleteFile } = require("../services/uploadServices");
 
 dotenv.config();
 let port = process.env.PORT;
@@ -41,7 +44,7 @@ async function createUser(req, res) {
       if (userExist.length == 0) {
         const password = await bcrypt.hash(req.user.password, 10);
         account = await initModel.account.create({});
-    
+
         userCreate = await initModel.user.create({
           idUser: idUser,
           fullName: req.user.fullName,
@@ -166,7 +169,7 @@ async function userLogin(req, res) {
       return responses;
     }
   } catch (error) {
-    throw(STATICVAR.user_ERROR_METHOD, error);
+    throw (STATICVAR.user_ERROR_METHOD, error);
   }
 }
 
@@ -190,7 +193,7 @@ async function userLogout(req, res) {
     let responses = response(STATICVAR.user_ERROR, 400, res, false, []);
     return responses;
   } catch (error) {
-    throw(STATICVAR.USER_LOGOUT_ERROR_METHOD, error);
+    throw (STATICVAR.USER_LOGOUT_ERROR_METHOD, error);
   }
 }
 
@@ -224,7 +227,7 @@ async function deleteUserLogin(req, res) {
       return responses;
     }
   } catch (error) {
-    throw(STATICVAR.USER_DELETE_USER_ERROR_METHOD, error);
+    throw (STATICVAR.USER_DELETE_USER_ERROR_METHOD, error);
   }
 }
 
@@ -255,7 +258,7 @@ async function updatePasswordUserLogin(req, res) {
     let responses = response(STATICVAR.USER_UPDATE_ERROR, 400, res, false, []);
     return responses;
   } catch (error) {
-    throw(STATICVAR.USER_UPDATE_ERROR_METHOD, error);
+    throw (STATICVAR.USER_UPDATE_ERROR_METHOD, error);
   }
 }
 
@@ -265,55 +268,38 @@ async function updatePasswordUserLogin(req, res) {
 //// validar extenciones de imagenes
 /// optimización de img
 //// obtener img ruta
-async function updateAvatarUserLogin(req, res) {
+async function updateFile(req, res) {
+  let user = null
+  let { idUser } = req.params
+  let { fileName } = req.body
   try {
-    if (req.file) {
-      const userAvatarBD = await initModel.user.findOne({
-        where: { id: req.query.id },
-      });
-      let deleteAvatar = userAvatarBD.dataValues.avatar;
-      if (deleteAvatar) {
-        deleteAvatar = deleteAvatar.split("/");
-        deleteAvatar = deleteAvatar[deleteAvatar.length - 1];
-        fs.unlinkSync(server + deleteAvatar);
+    user = await findUserByIdService(idUser)
+    if (user && user.dataValues.avatar) {
+      if (deleteFile(user.dataValues.avatar)) {
+        user = await initModel.user.update({ avatar: fileName }, {
+          where: { id: idUser },
+        });
+        if (user[0] == "1") {
+          user = await findUserByIdService(idUser)
+          return response(STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL, 200, res, "ok", user);
+        }
       }
-      const { filename } = req.file;
-      let avatar = {
-        avatar: server + filename,
-      };
-      const user = await initModel.user.update(avatar, {
-        where: { id: req.query.id },
+      else {
+        return false
+      }
+    }
+    else {
+      user = await initModel.user.update({ avatar: fileName }, {
+        where: { id: idUser },
       });
       if (user[0] == "1") {
-        let responses = response(
-          STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL,
-          200,
-          res,
-          "ok",
-          filename
-        );
-        return responses;
+        user = await findUserByIdService(idUser)
+        return response(STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL, 200, res, "ok", user);
       }
-      let responses = response(
-        STATICVAR.USER_UPDATE_AVATAR_ERROR,
-        400,
-        res,
-        false,
-        []
-      );
-      return responses;
-    } else {
-      let responses = response(
-        STATICVAR.USER_UPDATE_AVATAR_LOADING_ERROR,
-        400,
-        res,
-        false,
-        []
-      );
-      return responses;
     }
+
   } catch (error) {
-    throw(STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
+    throw (STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
   }
 }
 
@@ -323,11 +309,10 @@ async function updateAvatarUserLogin(req, res) {
 
 async function updateUserLogin(req, res) {
   try {
-    const { id } =
-      req.params;
-      const { fullName,  email, phone, documentNumber } =
-      req.body.data.user;
+    const { id } = req.params;
+    const { fullName, email, phone, documentNumber, postalCode } = req.body.data.user;
     let { documentType } = req.body.data.user;
+    // Reivisar bien la logica para los tipos de documentos...
     documentType == "CC" ? (documentType = 1) : (documentType = 2);
     let data = {
       fullName: fullName,
@@ -335,13 +320,14 @@ async function updateUserLogin(req, res) {
       phone: phone,
       documentNumber: documentNumber,
       document_type_iddocument_type: documentType,
-      finishRegister:true
+      postalCode: postalCode,
+      finishRegister: true
     };
     await initModel.user.update(data, {
       where: { id: id },
     });
 
-    let user = await initModel.user.findOne( {
+    let user = await initModel.user.findOne({
       where: { id: id },
     });
     delete user.dataValues.password
@@ -365,7 +351,7 @@ async function updateUserLogin(req, res) {
       return responses;
     }
   } catch (error) {
-    throw(STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
+    throw (STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
   }
 }
 
@@ -378,13 +364,13 @@ async function updateFinishRegisterUser(req, res) {
     const { userId } =
       req.params;
     let data = {
-      finishRegister:true
+      finishRegister: true
     };
     await initModel.user.update(data, {
       where: { id: userId },
     });
 
-    let user = await initModel.user.findOne( {
+    let user = await initModel.user.findOne({
       where: { id: userId },
     });
     delete user.dataValues.password
@@ -408,7 +394,7 @@ async function updateFinishRegisterUser(req, res) {
       return responses;
     }
   } catch (error) {
-    throw(STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
+    throw (STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
   }
 }
 
@@ -443,32 +429,26 @@ async function findUsers(req, res) {
       return responses;
     }
   } catch (error) {
-    throw(STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
+    throw (STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
   }
 }
 
 async function validateEmail(req, res) {
   try {
-    const {email, id} = req.body;
-    if(email)
-    {
-      
-      const emailExist = await initModel.user.findOne({where:{email:email }});
-      if (emailExist) {
-        let responses = response("Error el email ya se encuentra registrado para este usuario", 200, res, false, {email:email});
-        return responses;
-      } else {
-        let responses = response("El email es valido", 200, res, "ok", {email:false});
-        return responses;
+    const { email, id } = req.body;
+    const user = await initModel.user.findOne({ where: { id: id } });
+    if (user) {
+      if (email === user?.email) {
+        return response("Email el del usuario", 200, res, "ok", { email: 1 });
       }
+      const emailExist = await initModel.user.findOne({ where: { email: email } });
+      if (!emailExist) {
+        return response("Email no es de nadie", 200, res, "ok", { email: 2 });
+      }
+      return response("Email esta siendo utilizado", 200, res, "ok", { email: 3 });
     }
-    else{
-      let responses = response("email invalido", 400, res, false, []);
-      return responses;
-    }
-    
   } catch (error) {
-    throw(error);
+    throw (error);
   }
 }
 
@@ -478,7 +458,7 @@ module.exports = {
   createUser,
   deleteUserLogin,
   updatePasswordUserLogin,
-  updateAvatarUserLogin,
+  updateFile,
   updateUserLogin,
   findUser,
   findUsers,

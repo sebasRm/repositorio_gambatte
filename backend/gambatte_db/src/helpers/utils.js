@@ -2,6 +2,11 @@ const jwt = require("jsonwebtoken");
 const moment = require("moment");
 require("dotenv").config();
 
+const sequelize = require("../db/connectionDB").sequelize;
+const initModels = require("../models/init-models");
+
+let initModel = initModels(sequelize);
+
 function generateToken(user) {
   let payload = {
     sub: user,
@@ -41,10 +46,11 @@ class staticVar {
   static USER_UPDATE_SUCCESSFUL = "Usuario actualizado exitosamente";
   static USER_UPDATE_ERROR = "Error al actulizar el usuario";
   static USER_UPDATE_ERROR_METHOD = "error method ==> updatePasswordUserLogin";
-  static USER_UPDATE_AVATAR_SUCCESSFUL = "Avatar actualizado exitosamente";
+  static USER_UPDATE_AVATAR_SUCCESSFULL = "Avatar actualizado exitosamente";
   static USER_UPDATE_AVATAR_ERROR = "Error al actualizar la imagen Avatar";
+  static USER_UPDATE_FILE_ERROR = "Formato de archivo NAME_FILE no valido, extensiones permitidas:  EXT_AVALIBLE";
   static USER_UPDATE_AVATAR_LOADING_ERROR = "Error al cargar la imagen Avatar";
   static USER_UPDATE_AVATAR_ERROR_METHOD =
     "error method ==> updateAvatarUserLogin";
 }
-module.exports = { staticVar, response, generateRandomIdUser, generateToken };
+module.exports = { staticVar, response, generateRandomIdUser, generateToken, initModel };
