@@ -10,6 +10,7 @@ const { response } = require('../helpers/utils');
 
 
 const uploapFile = (req, res) => {
+
     let img = null
    let imgTwo=null
     let keysFiles = Object.keys(req.files)
@@ -60,6 +61,7 @@ const uploapFile = (req, res) => {
                 }
             });
     }
+
     img = req.files.image
     let ext_file = ['png', 'PNG', 'jpg', 'JPG', 'jpge', 'jpeg', 'mpge', 'mpg', 'gif'];
     let ext_type = img.name.split('.')[1];
