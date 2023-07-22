@@ -21,6 +21,7 @@ router.use(fileUpload())
 router.put('/api/user/upload-file/:idUser', uploapFile);
 router.put('/api/user/updatePassword', controllerUser.updatePasswordUserLogin);
 router.put('/api/user/photo-update/:idUser', controllerUser.updateFile)
+
 //            =====> Petición para actualizar datos generales de usuario
 router.put('/api/user/update/:id', controllerUser.updateUserLogin);
 router.put('/api/user/finishRegister/:userId', controllerUser.updateFinishRegisterUser);

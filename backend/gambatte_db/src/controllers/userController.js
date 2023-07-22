@@ -268,6 +268,20 @@ async function updatePasswordUserLogin(req, res) {
 //// validar extenciones de imagenes
 /// optimización de img
 //// obtener img ruta
+
+const validateFile=async (files)=>{
+  return new Promise(async (resolve, reject) => {
+    if(files.length>0)
+    {
+      resolve(true)
+    }else{
+      reject(false)
+    }
+
+  })
+}
+
+
 async function updateFile(req, res) {
   let user = null
   let { idUser } = req.params
@@ -450,6 +464,11 @@ async function validateEmail(req, res) {
   } catch (error) {
     throw (error);
   }
+}
+
+
+async function updateDocuments(req, res){
+
 }
 
 module.exports = {

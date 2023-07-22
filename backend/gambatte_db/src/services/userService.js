@@ -11,6 +11,7 @@ const findUserByIdService = async (idUser) => {
                 where: { id: idUser },
             });
             if (user) {
+                delete user.dataValues.password
                 return resolve(user)
             }
             reject(false)
