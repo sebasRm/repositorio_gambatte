@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "71aa030c-5cc6-42d2-90f0-dc4967080c3e",
+		"_postman_id": "bc20b1d0-034f-49d3-b5d2-dbcb996cbe99",
 		"name": "gambatte",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -162,20 +162,19 @@
 							"mode": "formdata",
 							"formdata": [
 								{
-									"key": "avatar",
+									"key": "image",
 									"type": "file",
 									"src": "/C:/Users/Sebastian Montenegro/Downloads/avatar.jpg"
 								},
 								{
-									"key": "id",
-									"value": "2",
-									"type": "default",
-									"disabled": true
+									"key": "image_two",
+									"type": "file",
+									"src": "/C:/Users/Sebastian Montenegro/Downloads/avatar.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://localhost:4000/api/user/updateAvatar?id=9",
+							"raw": "http://localhost:4000/api/user/upload-file/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -184,13 +183,8 @@
 							"path": [
 								"api",
 								"user",
-								"updateAvatar"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "9"
-								}
+								"upload-file",
+								"1"
 							]
 						}
 					},
