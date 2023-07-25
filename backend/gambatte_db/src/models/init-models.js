@@ -2,6 +2,7 @@ var DataTypes = require("sequelize").DataTypes;
 var _account = require("./account");
 var _buy_services = require("./buy_services");
 var _card = require("./card");
+var _country = require("./country");
 var _deposit = require("./deposit");
 var _document_type = require("./document_type");
 var _expenses = require("./expenses");
@@ -14,6 +15,7 @@ function initModels(sequelize) {
   var account = _account(sequelize, DataTypes);
   var buy_services = _buy_services(sequelize, DataTypes);
   var card = _card(sequelize, DataTypes);
+  var country = _country(sequelize, DataTypes);
   var deposit = _deposit(sequelize, DataTypes);
   var document_type = _document_type(sequelize, DataTypes);
   var expenses = _expenses(sequelize, DataTypes);
@@ -47,6 +49,7 @@ function initModels(sequelize) {
     account,
     buy_services,
     card,
+    country,
     deposit,
     document_type,
     expenses,

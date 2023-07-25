@@ -39,7 +39,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       references: {
         model: 'buy_services',
-        key: 'idbuy_services'
+        key: 'idBuy_services'
       }
     }
   }, {

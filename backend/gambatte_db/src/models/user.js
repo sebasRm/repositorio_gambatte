@@ -52,7 +52,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       references: {
         model: 'rol',
-        key: 'idrol'
+        key: 'idRol'
       }
     },
     account_idaccount: {
@@ -60,7 +60,7 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       references: {
         model: 'account',
-        key: 'idaccount'
+        key: 'idAccount'
       }
     },
     termsAndConditions: {
@@ -76,8 +76,20 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true,
       references: {
         model: 'document_type',
-        key: 'iddocument_type'
+        key: 'idDocument_type'
       }
+    },
+    documentImagenFront: {
+      type: DataTypes.STRING(45),
+      allowNull: true
+    },
+    documentImagenPost: {
+      type: DataTypes.STRING(45),
+      allowNull: true
+    },
+    indicative: {
+      type: DataTypes.STRING(45),
+      allowNull: true
     }
   }, {
     sequelize,

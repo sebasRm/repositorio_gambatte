@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(300),
       allowNull: true
     },
-    ccv: {
+    cvv: {
       type: DataTypes.STRING(300),
       allowNull: true
     },

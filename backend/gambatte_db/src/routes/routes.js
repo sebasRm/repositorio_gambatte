@@ -6,7 +6,8 @@ const controllerDeposit = require('../controllers/depositController');
 const controllerExpenses = require('../controllers/expensesController');
 // const upload = require("../libs/storange").default;
 
-const { uploapFile, getImageFile } = require('../services/uploadServices')
+const { uploapFile, getImageFile } = require('../services/uploadServices');
+const { getCountries, getCountryById } = require("../controllers/country");
 
 const router = express.Router();
 
@@ -42,6 +43,9 @@ router.post('/api/expenses', controllerExpenses.createExpenses);
 router.get('/api/expenses/:userId', controllerExpenses.findExpensesByUserId);
 router.get('/api/expenses/id/:idExpenses', controllerExpenses.findExpensesById);
 
+//            =====> RUTAS MODULO PAISES
+router.get('/api/countries', getCountries);
+router.get('/api/country/:id', getCountryById);
 
 
 module.exports = { router };

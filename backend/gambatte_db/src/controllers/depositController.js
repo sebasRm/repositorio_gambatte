@@ -37,7 +37,7 @@ async function createDeposit(req, res) {
     cardExits == false &&
       (await initModel.card.create({
         cardNumber: numberCard,
-        ccv: ccvCard,
+        cvv: ccvCard,
         expYear: yearCard,
         month: monthCard,
         termAndConditions: req.cardInfo.termAndConditions,

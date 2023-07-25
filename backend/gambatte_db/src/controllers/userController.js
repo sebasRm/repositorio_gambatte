@@ -57,6 +57,7 @@ async function createUser(req, res) {
           registerStatus: true,
           status: false,
           finishRegister: false,
+          indicative: req.user.indicative
         });
         user = await initModel.user.findAll({
           where: {

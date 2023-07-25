@@ -3,7 +3,7 @@ const initModels = require("../models/init-models");
 const response = require("../helpers/utils").response;
 let initModel = initModels(sequelize);
 const bcrypt = require("bcrypt");
-const { Op } = require("sequelize");
+const { Op, Model } = require("sequelize");
 
 async function findExpensesByUserId(req, res) {
   // Aqui se dede de hace un join debido a que se puede llegar a expenses com usuarios -> cuenta -> expenses
@@ -13,15 +13,24 @@ async function findExpensesByUserId(req, res) {
       where: {
         id: userId,
       },
-    });
-    if (user) {
-      let expenses = await initModel.expenses.findAll({
-        where: {
-          account_idaccount: user.dataValues.account_idaccount,
+      include : [
+        {
+          model: initModel.account,
+          as: "account_",
+          include:[
+            {
+              model: initModel.expenses,
+              as: "expenses",
+            }
+          ]
         },
-      });
-      if (expenses) {
-        return response("retiros del usuario", 200, res, "ok", expenses);
+      ]
+    });
+    console.log("user", user)
+    if (user) {
+      delete user.dataValues.password
+      if (user) {
+        return response("retiros del usuario", 200, res, "ok", user);
       }
     } else {
       return response("Error al buscar los retiros", 400, res, "false", []);
