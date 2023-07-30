@@ -19,10 +19,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: true
     },
-    bank: {
-      type: DataTypes.STRING(45),
-      allowNull: true
-    },
     keyAccount: {
       type: DataTypes.STRING(45),
       allowNull: true
@@ -37,6 +33,14 @@ module.exports = function(sequelize, DataTypes) {
       references: {
         model: 'account',
         key: 'idAccount'
+      }
+    },
+    bank: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'bank',
+        key: 'idBank'
       }
     }
   }, {
@@ -57,6 +61,13 @@ module.exports = function(sequelize, DataTypes) {
         using: "BTREE",
         fields: [
           { name: "account_idaccount" },
+        ]
+      },
+      {
+        name: "fk_expenses_bank1_idx",
+        using: "BTREE",
+        fields: [
+          { name: "bank" },
         ]
       },
     ]

@@ -1,5 +1,6 @@
 var DataTypes = require("sequelize").DataTypes;
 var _account = require("./account");
+var _bank = require("./bank");
 var _buy_services = require("./buy_services");
 var _card = require("./card");
 var _country = require("./country");
@@ -13,6 +14,7 @@ var _user = require("./user");
 
 function initModels(sequelize) {
   var account = _account(sequelize, DataTypes);
+  var bank = _bank(sequelize, DataTypes);
   var buy_services = _buy_services(sequelize, DataTypes);
   var card = _card(sequelize, DataTypes);
   var country = _country(sequelize, DataTypes);
@@ -30,12 +32,14 @@ function initModels(sequelize) {
   account.hasMany(expenses, { as: "expenses", foreignKey: "account_idaccount"});
   user.belongsTo(account, { as: "account_", foreignKey: "account_idaccount"});
   account.hasMany(user, { as: "users", foreignKey: "account_idaccount"});
+  expenses.belongsTo(bank, { as: "bank_", foreignKey: "bank"});
+  bank.hasMany(expenses, { as: "expenses", foreignKey: "bank"});
   payment.belongsTo(buy_services, { as: "buy_", foreignKey: "buy_services_idbuy_services"});
   buy_services.hasMany(payment, { as: "payments", foreignKey: "buy_services_idbuy_services"});
   transaction.belongsTo(buy_services, { as: "buy_", foreignKey: "buy_services_idbuy_services"});
   buy_services.hasMany(transaction, { as: "transactions", foreignKey: "buy_services_idbuy_services"});
-  user.belongsTo(document_type, { as: "document_", foreignKey: "document_type_iddocument_type"});
-  document_type.hasMany(user, { as: "users", foreignKey: "document_type_iddocument_type"});
+  user.belongsTo(document_type, { as: "documentType_", foreignKey: "documentType"});
+  document_type.hasMany(user, { as: "users", foreignKey: "documentType"});
   user.belongsTo(rol, { as: "rol_", foreignKey: "rol_idrol"});
   rol.hasMany(user, { as: "users", foreignKey: "rol_idrol"});
   buy_services.belongsTo(user, { as: "user_", foreignKey: "user_login_id"});
@@ -47,6 +51,7 @@ function initModels(sequelize) {
 
   return {
     account,
+    bank,
     buy_services,
     card,
     country,

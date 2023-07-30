@@ -11,7 +11,7 @@ const validateExtencion = async(img, responseData, res)=>{
     return new Promise(async (resolve, reject) => {
     let ext_file = ['png', 'PNG', 'jpg', 'JPG', 'jpge', 'jpeg', 'mpge', 'mpg', 'gif'];
     let ext_type = img.name.split('.')[1];
-
+     
     if (ext_file.indexOf(ext_type) < 0 ) {
         let msg = STATICVAR.USER_UPDATE_FILE_ERROR.replace('NAME_FILE', img.name)
         msg += msg.replace('EXT_AVALIBLE', ext_file.join(', '))
@@ -20,7 +20,7 @@ const validateExtencion = async(img, responseData, res)=>{
     else{
         let fecha = moment().format('YYYY-MM-DD').replace('-', '_')
         let fileName = `${uuidv4()}-${fecha}-${img.name}`
-        
+        console.log("soy la img", img)
         responseData.push(fileName)
         let route = `./src/storage/images/${fileName}`
         img.mv(`${route}`, (error) => {
@@ -49,15 +49,19 @@ const uploapFile = async(req, res) => {
     if(keysFiles.length>1){
         for(const keys in keysValues)
         {
-           let responses=await validateExtencion(keysValues[keys], responseData, res)
-           if(responses.length>1){
-            return response(STATICVAR.USER_UPDATE_AVATAR_SUCCESSFULL, 200, res, "ok", responseData);
+           let data=await validateExtencion(keysValues[keys], responseData, res)
+           let responses = { 
+            cc_front : responseData[0],
+            cc_post : responseData[1]
+           } 
+           if(data.length>1){
+            return response(STATICVAR.USER_UPDATE_AVATAR_SUCCESSFULL, 200, res, "ok", responses);
            }
         }
     }else{
         let responses=await validateExtencion(keysValues[0], responseData, res)
         if(responses.length>0){
-            return response(STATICVAR.USER_UPDATE_AVATAR_SUCCESSFULL, 200, res, "ok", responseData);
+            return response(STATICVAR.USER_UPDATE_AVATAR_SUCCESSFULL, 200, res, "ok", responseData[0]);
         }
     }
 }

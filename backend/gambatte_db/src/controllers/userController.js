@@ -325,18 +325,18 @@ async function updateFile(req, res) {
 async function updateUserLogin(req, res) {
   try {
     const { id } = req.params;
-    const { fullName, email, phone, documentNumber, postalCode } = req.body.data.user;
+    const { fullName, email, phone, documentNumber, postalCode, indicative } = req.body.data.user;
     let { documentType } = req.body.data.user;
     // Reivisar bien la logica para los tipos de documentos...
-    documentType == "CC" ? (documentType = 1) : (documentType = 2);
     let data = {
       fullName: fullName,
       email: email,
       phone: phone,
       documentNumber: documentNumber,
-      document_type_iddocument_type: documentType,
+      documentType: documentType,
       postalCode: postalCode,
-      finishRegister: true
+      finishRegister: true,
+      indicative: indicative
     };
     await initModel.user.update(data, {
       where: { id: id },

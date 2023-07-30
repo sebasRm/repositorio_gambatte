@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`user` (
   `email` VARCHAR(45) NULL,
   `phone` VARCHAR(10) NULL,
   `documentNumber` VARCHAR(45) NULL,
+  `documentType` INT NULL,
   `status` TINYINT NULL,
   `statusActive` TINYINT NULL,
   `avatar` VARCHAR(150) NULL,
@@ -63,14 +64,14 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`user` (
   `account_idaccount` INT NOT NULL,
   `termsAndConditions` TINYINT NULL,
   `finishRegister` DOUBLE NULL,
-  `document_type_iddocument_type` INT NULL,
   `documentImagenFront` VARCHAR(45) NULL,
   `documentImagenPost` VARCHAR(45) NULL,
   `indicative` VARCHAR(45) NULL,
+  `postalCode` VARCHAR(45) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_user_login_rol_idx` (`rol_idrol` ) ,
   INDEX `fk_user_login_account1_idx` (`account_idaccount` ) ,
-  INDEX `fk_user_login_document_type1_idx` (`document_type_iddocument_type` ) ,
+  INDEX `fk_user_login_document_type1_idx` (`documentType` ) ,
   CONSTRAINT `fk_user_login_rol`
     FOREIGN KEY (`rol_idrol`)
     REFERENCES `gambatte_db`.`rol` (`idRol`)
@@ -82,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`user` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_user_login_document_type1`
-    FOREIGN KEY (`document_type_iddocument_type`)
+    FOREIGN KEY (`documentType`)
     REFERENCES `gambatte_db`.`document_type` (`idDocument_type`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
@@ -110,6 +111,16 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
+-- Table `gambatte_db`.`bank`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `gambatte_db`.`bank` (
+  `idBank` INT NOT NULL,
+  `name` VARCHAR(45) NULL,
+  PRIMARY KEY (`idBank`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
 -- Table `gambatte_db`.`expenses`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `gambatte_db`.`expenses` (
@@ -117,15 +128,21 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`expenses` (
   `amount` DOUBLE NULL,
   `expensesDate` DATE NULL,
   `state` INT NULL,
-  `bank` VARCHAR(45) NULL,
   `keyAccount` VARCHAR(45) NULL,
   `swiftCode` VARCHAR(45) NULL,
   `account_idaccount` INT NOT NULL,
+  `bank_idbank` INT NOT NULL,
   PRIMARY KEY (`idExpenses`),
   INDEX `fk_expenses_account1_idx` (`account_idaccount` ) ,
+  INDEX `fk_expenses_bank1_idx` (`bank_idbank` ) ,
   CONSTRAINT `fk_expenses_account1`
     FOREIGN KEY (`account_idaccount`)
     REFERENCES `gambatte_db`.`account` (`idAccount`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_expenses_bank1`
+    FOREIGN KEY (`bank_idbank`)
+    REFERENCES `gambatte_db`.`bank` (`idBank`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

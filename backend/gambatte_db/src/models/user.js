@@ -35,6 +35,14 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.STRING(45),
       allowNull: true
     },
+    documentType: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'document_type',
+        key: 'idDocument_type'
+      }
+    },
     status: {
       type: DataTypes.TINYINT,
       allowNull: true
@@ -71,14 +79,6 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.DOUBLE,
       allowNull: true
     },
-    document_type_iddocument_type: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'document_type',
-        key: 'idDocument_type'
-      }
-    },
     documentImagenFront: {
       type: DataTypes.STRING(45),
       allowNull: true
@@ -88,6 +88,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     indicative: {
+      type: DataTypes.STRING(45),
+      allowNull: true
+    },
+    postalCode: {
       type: DataTypes.STRING(45),
       allowNull: true
     }
@@ -122,7 +126,7 @@ module.exports = function(sequelize, DataTypes) {
         name: "fk_user_login_document_type1_idx",
         using: "BTREE",
         fields: [
-          { name: "document_type_iddocument_type" },
+          { name: "documentType" },
         ]
       },
     ]
