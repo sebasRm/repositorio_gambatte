@@ -51,7 +51,7 @@ async function createUser(req, res) {
           email: req.user.email,
           phone: req.user.phone,
           password: password,
-          rol_idrol: 2,
+          rol_idrol: req.user.role,
           account_idaccount: account.dataValues.idAccount,
           termsAndConditions: req.user.termAndConditions,
           registerStatus: true,
