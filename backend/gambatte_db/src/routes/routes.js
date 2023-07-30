@@ -16,7 +16,7 @@ router.post('/api/user', controllerUser.createUser);
 router.post('/api/validate/email', controllerUser.validateEmail);
 router.get('/api/account/:userId', controllerAccount.searchBalance);
 router.get('/api/user', controllerUser.findUsers);
-router.get('/api/user/id', controllerUser.findUser);
+router.get('/api/user/id/:userId', controllerUser.findUser);
 router.get('/api/user/photo/:imageFile', getImageFile)
 router.use(fileUpload())
 router.put('/api/user/upload-file/:idUser', uploapFile);

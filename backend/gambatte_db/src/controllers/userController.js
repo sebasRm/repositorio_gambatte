@@ -416,13 +416,22 @@ async function updateFinishRegisterUser(req, res) {
 
 async function findUser(req, res) {
   try {
-    const { id } = req.query;
-    const users = await initModel.user.findOne({
-      where: { id: id },
+    const { userId } = req.params;
+    let user = await initModel.user.findOne({
+      where: { id: userId },
+      include: [
+        {
+          model: initModel.rol,
+          as: "rol_",
+        },
+      ],
     });
-    if (users) {
-      delete users.dataValues.password;
-      let responses = response("Users", 200, res, "ok", users);
+    delete user.dataValues.password;
+    user.dataValues.role = user.dataValues.rol_.dataValues.role;
+    delete user.dataValues.rol_idrol
+    delete user.dataValues.rol_
+    if (user) {
+      let responses = response("Users", 200, res, "ok", user);
       return responses;
     } else {
       let responses = response("Error al buscar usuario", 400, res, false, []);
@@ -435,8 +444,22 @@ async function findUser(req, res) {
 
 async function findUsers(req, res) {
   try {
-    const users = await initModel.user.findAll({});
+    let users = await initModel.user.findAll({include: [
+      {
+        model: initModel.rol,
+        as: "rol_",
+      },
+    ],});
     if (users) {
+
+      users.map((user)=>{
+        delete user.dataValues.password;
+        user.dataValues.role = user.dataValues.rol_.dataValues.role;
+        delete user.dataValues.rol_idrol
+        delete user.dataValues.rol_
+
+      })
+      console.log("user", users)
       let responses = response("Users", 200, res, "ok", users);
       return responses;
     } else {
