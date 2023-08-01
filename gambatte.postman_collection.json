@@ -225,9 +225,15 @@
 					"name": "api-user-id",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "role",
+								"value": "Admin",
+								"type": "default"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:4000/api/user/id?id=1",
+							"raw": "http://localhost:4000/api/user/id/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -236,13 +242,8 @@
 							"path": [
 								"api",
 								"user",
-								"id"
-							],
-							"query": [
-								{
-									"key": "id",
-									"value": "1"
-								}
+								"id",
+								"1"
 							]
 						}
 					},
@@ -252,7 +253,13 @@
 					"name": "api-user",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "role",
+								"value": "User",
+								"type": "default"
+							}
+						],
 						"url": {
 							"raw": "http://localhost:4000/api/user",
 							"protocol": "http",
