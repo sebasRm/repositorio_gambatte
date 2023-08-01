@@ -42,6 +42,7 @@ async function createUser(req, res) {
         },
       });
       if (userExist.length == 0) {
+
         const password = await bcrypt.hash(req.user.password, 10);
         account = await initModel.account.create({});
 
@@ -270,12 +271,11 @@ async function updatePasswordUserLogin(req, res) {
 /// optimización de img
 //// obtener img ruta
 
-const validateFile=async (files)=>{
+const validateFile = async (files) => {
   return new Promise(async (resolve, reject) => {
-    if(files.length>0)
-    {
+    if (files.length > 0) {
       resolve(true)
-    }else{
+    } else {
       reject(false)
     }
 
@@ -434,6 +434,7 @@ async function findUser(req, res) {
 }
 
 async function findUsers(req, res) {
+  console.log(req.headers);
   try {
     const users = await initModel.user.findAll({});
     if (users) {
@@ -468,7 +469,7 @@ async function validateEmail(req, res) {
 }
 
 
-async function updateDocuments(req, res){
+async function updateDocuments(req, res) {
 
 }
 
