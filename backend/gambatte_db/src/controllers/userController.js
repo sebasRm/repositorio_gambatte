@@ -416,6 +416,7 @@ async function updateFinishRegisterUser(req, res) {
 
 async function findUser(req, res) {
   try {
+    const {role} = req.headers
     const { userId } = req.params;
     let user = await initModel.user.findOne({
       where: { id: userId },
@@ -424,8 +425,23 @@ async function findUser(req, res) {
           model: initModel.rol,
           as: "rol_",
         },
+        {
+          model: initModel.account,
+          as: "account_",
+        },
+   
       ],
     });
+    if(role =='User')
+    {
+      delete user.dataValues.documentNumber
+      delete user.dataValues.documentType
+      delete user.dataValues.status
+      delete user.dataValues.statusActive
+      delete user.dataValues.account_idaccount
+      delete user.dataValues.postalCode
+      delete user.dataValues.role
+    }
     delete user.dataValues.password;
     user.dataValues.role = user.dataValues.rol_.dataValues.role;
     delete user.dataValues.rol_idrol
@@ -444,11 +460,18 @@ async function findUser(req, res) {
 
 async function findUsers(req, res) {
   try {
+    const {role} = req.headers
+
     let users = await initModel.user.findAll({include: [
       {
         model: initModel.rol,
         as: "rol_",
       },
+      {
+        model: initModel.account,
+        as: "account_",
+      },
+ 
     ],});
     if (users) {
 
@@ -457,9 +480,17 @@ async function findUsers(req, res) {
         user.dataValues.role = user.dataValues.rol_.dataValues.role;
         delete user.dataValues.rol_idrol
         delete user.dataValues.rol_
-
+        if(role =='User')
+        {
+          delete user.dataValues.documentNumber
+          delete user.dataValues.documentType
+          delete user.dataValues.status
+          delete user.dataValues.statusActive
+          delete user.dataValues.account_idaccount
+          delete user.dataValues.postalCode
+          delete user.dataValues.role
+        }
       })
-      console.log("user", users)
       let responses = response("Users", 200, res, "ok", users);
       return responses;
     } else {
