@@ -436,7 +436,6 @@ async function findUser(req, res) {
     {
       delete user.dataValues.documentNumber
       delete user.dataValues.documentType
-      delete user.dataValues.status
       delete user.dataValues.statusActive
       delete user.dataValues.account_idaccount
       delete user.dataValues.postalCode
@@ -484,7 +483,6 @@ async function findUsers(req, res) {
         {
           delete user.dataValues.documentNumber
           delete user.dataValues.documentType
-          delete user.dataValues.status
           delete user.dataValues.statusActive
           delete user.dataValues.account_idaccount
           delete user.dataValues.postalCode
