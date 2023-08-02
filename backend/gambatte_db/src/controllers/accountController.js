@@ -7,39 +7,84 @@ let initModel = initModels(sequelize);
  * Función para consultar el abalance del usuario
  */
 /**
- * 
- * @param {*} req 
- * @param {*} res 
- * @returns 
+ *
+ * @param {*} req
+ * @param {*} res
+ * @returns
  */
 
 async function searchBalance(req, res) {
-    const { userId } = req.params;
-    try {
-      const user = await initModel.user.findOne({
-        where: { id: userId },
-        include: [
-          {
-            model: initModel.account,
-            as: "account_",
-          },
-        ],
-        attributes:['id']
-      });
+  const { userId } = req.params;
+  try {
+    const user = await initModel.user.findOne({
+      where: { id: userId },
+      include: [
+        {
+          model: initModel.account,
+          as: "account_",
+        },
+      ],
+      attributes: ["id"],
+    });
 
-      if (user) {
-        let responses = response("balance...", 200, res, "ok", user);
-        return responses;
-      }
-      let responses = response('Error al consultar el balance', 400, res, false, []);
+    if (user) {
+      let responses = response("balance...", 200, res, "ok", user);
       return responses;
-    } catch (error) {
-      console.log('Error al consultar el balance', error);
     }
+    let responses = response(
+      "Error al consultar el balance",
+      400,
+      res,
+      false,
+      []
+    );
+    return responses;
+  } catch (error) {
+    console.log("Error al consultar el balance", error);
   }
-  
+}
 
-  module.exports = {
-    searchBalance
-  };
-  
+async function findDepositAndExpense(req, res) {
+  const { userId } = req.params;
+  try {
+    const user = await initModel.user.findOne({
+      where: { id: userId },
+      include: [
+        {
+          model: initModel.account,
+          as: "account_",
+          include: [
+            {
+              model: initModel.deposit,
+              as: "deposits",
+            },
+            {
+              model: initModel.expenses,
+              as: "expenses",
+            },
+          ],
+        },
+      ],
+    });
+
+    if (user) {
+      let responses = response("balance...", 200, res, "ok", user);
+      return responses;
+    }
+    let responses = response(
+      "Error al consultar el balance",
+      400,
+      res,
+      false,
+      []
+    );
+    return responses;
+  } catch (error) {
+    console.log("Error al consultar el balance", error);
+  }
+}
+
+module.exports = {
+  searchBalance,
+  findDepositAndExpense
+};
