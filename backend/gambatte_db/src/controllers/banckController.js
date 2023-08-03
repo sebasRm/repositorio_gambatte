@@ -42,12 +42,26 @@ async function findBancks(req, res) {
         banckExist
       );
     } else {
-      let banck = await initModel.bank.create({
-        name: name,
-      });
       return response("Error al buscar los bancos", 400, res, false, []);
     }
   }
+
+  async function findBanckById(req, res) {
+    const {id}= req.params
+    let banckExist = await initModel.bank.findOne({where:{id:id}});
+    if (banckExist) {
+      return  response(
+        "Bancos registrado ....",
+        201,
+        res,
+        "ok",
+        banckExist
+      );
+    } else {
+      return response("Error al buscar los bancos", 400, res, false, []);
+    }
+  }
+
 
 module.exports = {
   createBanck,
