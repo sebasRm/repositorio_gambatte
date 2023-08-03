@@ -114,7 +114,7 @@ ENGINE = InnoDB;
 -- Table `gambatte_db`.`bank`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `gambatte_db`.`bank` (
-  `idBank` INT NOT NULL,
+  `idBank` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL,
   PRIMARY KEY (`idBank`))
 ENGINE = InnoDB;
