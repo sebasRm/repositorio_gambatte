@@ -53,5 +53,6 @@ router.get('/api/country/:id', getCountryById);
 //            =====> RUTAS MODULO BANCK
 router.post('/api/banck', controllerBanck.createBanck);
 router.get('/api/bancks', controllerBanck.findBancks);
+router.get('/api/banck/:idBanck', controllerBanck.findBanckById);
 
 module.exports = { router };

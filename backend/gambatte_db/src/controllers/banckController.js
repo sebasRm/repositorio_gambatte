@@ -36,7 +36,7 @@ async function findBancks(req, res) {
     if (banckExist.length > 0) {
       return  response(
         "Bancos registrados ....",
-        201,
+        200,
         res,
         "ok",
         banckExist
@@ -47,12 +47,13 @@ async function findBancks(req, res) {
   }
 
   async function findBanckById(req, res) {
-    const {id}= req.params
-    let banckExist = await initModel.bank.findOne({where:{id:id}});
+    const {idBanck}= req.params
+    console.log("id", idBanck)
+    let banckExist = await initModel.bank.findOne({where:{idBanck:idBanck}});
     if (banckExist) {
       return  response(
-        "Bancos registrado ....",
-        201,
+        "Banco registrado ....",
+        200,
         res,
         "ok",
         banckExist
@@ -65,5 +66,6 @@ async function findBancks(req, res) {
 
 module.exports = {
   createBanck,
-  findBancks
+  findBancks,
+  findBanckById
 };
