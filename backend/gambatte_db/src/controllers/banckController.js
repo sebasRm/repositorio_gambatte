@@ -62,9 +62,51 @@ async function findBancks(req, res) {
     }
   }
 
+  async function updateBanck(req, res) {
+    const {idBanck}= req.params
+    const { name } = req.body.data.banck;
+    let data = {
+        name: name
+    }
+    let banckExist = await initModel.bank.update(data,{where:{idBanck:idBanck}});
+    if (banckExist) {
+    let banck = await initModel.bank.findOne({where:{idBanck:idBanck}});
+      return  response(
+        "banco actualizado con exito",
+        200,
+        res,
+        "ok",
+        banck
+      );
+    } else {
+      return response("Error al actualizar el banco", 400, res, false, []);
+    }
+  }
+
+
+  async function deleteBanck(req, res) {
+    const {idBanck}= req.params
+    let banckExist = await initModel.bank.destroy({where:{idBanck:idBanck}});
+    if (banckExist ==1) {
+    let banck = await initModel.bank.findOne({where:{idBanck:idBanck}});
+      return  response(
+        "banco eliminado con exito",
+        200,
+        res,
+        "ok",
+        []
+      );
+    } else {
+      return response("Error al eliminar el banco", 400, res, false, []);
+    }
+  }  
+
 
 module.exports = {
   createBanck,
   findBancks,
-  findBanckById
+  findBanckById,
+  updateBanck,
+  deleteBanck
+  
 };

@@ -54,5 +54,7 @@ router.get('/api/country/:id', getCountryById);
 router.post('/api/banck', controllerBanck.createBanck);
 router.get('/api/bancks', controllerBanck.findBancks);
 router.get('/api/banck/:idBanck', controllerBanck.findBanckById);
+router.put('/api/banck/:idBanck', controllerBanck.updateBanck);
+router.delete('/api/banck/:idBanck', controllerBanck.deleteBanck);
 
 module.exports = { router };
