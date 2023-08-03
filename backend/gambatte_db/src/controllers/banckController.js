@@ -48,7 +48,6 @@ async function findBancks(req, res) {
 
   async function findBanckById(req, res) {
     const {idBanck}= req.params
-    console.log("id", idBanck)
     let banckExist = await initModel.bank.findOne({where:{idBanck:idBanck}});
     if (banckExist) {
       return  response(
