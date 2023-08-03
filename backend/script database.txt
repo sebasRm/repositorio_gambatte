@@ -114,9 +114,9 @@ ENGINE = InnoDB;
 -- Table `gambatte_db`.`bank`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `gambatte_db`.`bank` (
-  `idBank` INT NOT NULL,
+  `idBanck` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NULL,
-  PRIMARY KEY (`idBank`))
+  PRIMARY KEY (`idBanck`))
 ENGINE = InnoDB;
 
 
@@ -131,18 +131,18 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`expenses` (
   `keyAccount` VARCHAR(45) NULL,
   `swiftCode` VARCHAR(45) NULL,
   `account_idaccount` INT NOT NULL,
-  `bank_idbank` INT NOT NULL,
+  `bank` INT NOT NULL,
   PRIMARY KEY (`idExpenses`),
   INDEX `fk_expenses_account1_idx` (`account_idaccount` ) ,
-  INDEX `fk_expenses_bank1_idx` (`bank_idbank` ) ,
+  INDEX `fk_expenses_bank1_idx` (`bank` ) ,
   CONSTRAINT `fk_expenses_account1`
     FOREIGN KEY (`account_idaccount`)
     REFERENCES `gambatte_db`.`account` (`idAccount`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_expenses_bank1`
-    FOREIGN KEY (`bank_idbank`)
-    REFERENCES `gambatte_db`.`bank` (`idBank`)
+    FOREIGN KEY (`bank`)
+    REFERENCES `gambatte_db`.`bank` (`idBanck`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

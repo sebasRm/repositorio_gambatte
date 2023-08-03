@@ -75,7 +75,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"data\": \r\n    {\r\n      \"user\": {\r\n        \"fullName\": \"Sebastian Ricardo\",\r\n        \"email\": \"sebas1234@bancolombia.com.co\",\r\n        \"phone\": \"3053028411\",\r\n        \"password\": \"123456\",\r\n        \"termAndConditions\": true,\r\n        \"indicative\":57\r\n      }\r\n    }\r\n  \r\n}\r\n",
+							"raw": "{\r\n  \"data\": \r\n    {\r\n      \"user\": {\r\n        \"fullName\": \"Sebastian Ricardo\",\r\n        \"email\": \"sebas123144@bancolombia.com.co\",\r\n        \"phone\": \"3053028411\",\r\n        \"password\": \"123456\",\r\n        \"termAndConditions\": true,\r\n        \"indicative\":57,\r\n        \"role\":1\r\n      }\r\n    }\r\n  \r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -197,7 +197,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"data\":\r\n    {\r\n        \"user\":{\r\n            \"fullName\":\"Samuel Moreno\",\r\n            \"email\":\"samuel@gmail.com\",\r\n            \"phone\":\"3159841\",\r\n            \"documentNumber\":\"1668844226\",\r\n            \"documentType\":\"CC\"\r\n        }\r\n    }\r\n}",
+							"raw": "{\r\n    \"data\":\r\n    {\r\n        \"user\":{\r\n            \"fullName\":\"Samuel Moreno\",\r\n            \"email\":\"samuel123@gmail.com\",\r\n            \"phone\":\"3159841\",\r\n            \"documentNumber\":\"1668844226\",\r\n            \"documentType\":1,\r\n            \"indicative\":\"544\",\r\n            \"postalCode\":\"1544\"\r\n        }\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -205,7 +205,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/api/user/update/1",
+							"raw": "http://localhost:4000/api/user/update/6",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -215,7 +215,7 @@
 								"api",
 								"user",
 								"update",
-								"1"
+								"6"
 							]
 						}
 					},
@@ -352,6 +352,29 @@
 								"api",
 								"user",
 								"photo-update",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api-account-deposit-expense",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/account/deposit/expense/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"account",
+								"deposit",
+								"expense",
 								"1"
 							]
 						}
@@ -545,6 +568,111 @@
 								"expenses",
 								"id",
 								"8"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "modulo_banck",
+			"item": [
+				{
+					"name": "api-banck",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\":{\r\n        \"banck\":{\r\n            \"name\" :\"Banco Azteca\"\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/banck",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"banck"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api-bancks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/bancks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"bancks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api-banck",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\":{\r\n        \"banck\":{\r\n            \"name\":\"banco prueba\"\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/banck/7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"banck",
+								"7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ap-banck",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/banck/7",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"banck",
+								"7"
 							]
 						}
 					},
