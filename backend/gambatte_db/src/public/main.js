@@ -29,5 +29,9 @@ deposits.addEventListener('submit', e=>{
     e.preventDefault()
     console.log("enviando...")
     socket.emit('new-deposit',{data: data})
+    socket.on('notificatios-users', data =>{
+        console.log("notificactions users", data)
+    })
+
 })
 

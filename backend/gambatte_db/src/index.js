@@ -36,7 +36,13 @@ io.on("connection", async (socket) => {
   socket.on('new-deposit', async (socket) => {
     //console.log("soy el new deposit  =>", socket)
     createDeposit(socket)
-
+    try {
+      let dataUsers =await connection.sequelize.query('call gambatte_db.notifications_user();')
+      io.emit('notificatios-users', { data: dataUsers });
+    } catch (error) {
+      throw error;
+    }
+  
   })
 
   try {
