@@ -8,7 +8,7 @@ const accountController =
   require("./controllers/accountController").searchBalance;
 import { Server as WebSocketServer } from "socket.io";
 import http from "http";
-import { notificationsUsers } from "./controllers/notificationController";
+import { notificationsUsers, createDeposit } from "./controllers/notificationController";
 
 dotenv.config();
 let port = process.env.PORT;
@@ -33,8 +33,10 @@ io.on("connection", async (socket) => {
   socket.on("conectado", async (mensaje) => {
     console.log("Mensaje : ", mensaje);
   });
-  io.on('newDeposit', async (socket) => {
-    console.log("soy el new deposit  =>",socket)
+  socket.on('new-deposit', async (socket) => {
+    //console.log("soy el new deposit  =>", socket)
+    createDeposit(socket)
+
   })
 
   try {

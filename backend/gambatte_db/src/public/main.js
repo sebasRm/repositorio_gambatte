@@ -2,8 +2,7 @@ const socket =io();
 const deposits = document.querySelector('#deposits')
 
 let data = {
-    data:
-        {
+   
             cardInfo:{
                 cardNumber:"4894 4542 2316",
                 ccv:"343",
@@ -22,13 +21,13 @@ let data = {
                 fullName:"Yirleison Palomeque Moreno",
                 id:1
             }
-        }
+        
 }
 
 
 deposits.addEventListener('submit', e=>{
     e.preventDefault()
     console.log("enviando...")
-    socket.emit('newDeposit', data)
+    socket.emit('new-deposit',{data: data})
 })
 
