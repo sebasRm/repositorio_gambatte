@@ -579,13 +579,13 @@
 			"name": "modulo_banck",
 			"item": [
 				{
-					"name": "api-banck",
+					"name": "api-bank",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"data\":{\r\n        \"banck\":{\r\n            \"name\" :\"Banco Azteca\"\r\n        }\r\n    }\r\n}",
+							"raw": "{\r\n    \"data\":{\r\n        \"bank\":{\r\n            \"name\" :\"Banco Azteca2\"\r\n        }\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -593,7 +593,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/api/banck",
+							"raw": "http://localhost:4000/api/bank",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -601,19 +601,19 @@
 							"port": "4000",
 							"path": [
 								"api",
-								"banck"
+								"bank"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "api-bancks",
+					"name": "api-bank",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:4000/api/bancks",
+							"raw": "http://localhost:4000/api/bank",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -621,20 +621,20 @@
 							"port": "4000",
 							"path": [
 								"api",
-								"bancks"
+								"bank"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "api-banck",
+					"name": "api-bank",
 					"request": {
 						"method": "PUT",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"data\":{\r\n        \"banck\":{\r\n            \"name\":\"banco prueba\"\r\n        }\r\n    }\r\n}",
+							"raw": "{\r\n    \"data\":{\r\n        \"bank\":{\r\n            \"name\":\"banco prueba\"\r\n        }\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -642,7 +642,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/api/banck/7",
+							"raw": "http://localhost:4000/api/bank/7",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -650,7 +650,7 @@
 							"port": "4000",
 							"path": [
 								"api",
-								"banck",
+								"bank",
 								"7"
 							]
 						}
@@ -658,12 +658,12 @@
 					"response": []
 				},
 				{
-					"name": "ap-banck",
+					"name": "ap-bank",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:4000/api/banck/7",
+							"raw": "http://localhost:4000/api/bank/7",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -671,7 +671,7 @@
 							"port": "4000",
 							"path": [
 								"api",
-								"banck",
+								"bank",
 								"7"
 							]
 						}
