@@ -44,9 +44,9 @@ async function createUser(req, res) {
       if (userExist.length == 0) {
 
         const password = await bcrypt.hash(req.user.password, 10);
-        account = await initModel.account.create({});
+        let account = await initModel.account.create({});
 
-        userCreate = await initModel.user.create({
+        let userCreate = await initModel.user.create({
           idUser: idUser,
           fullName: req.user.fullName,
           email: req.user.email,

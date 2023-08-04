@@ -7,7 +7,6 @@ const { Op } = require("sequelize");
 
 async function getCountries(req, res) {
     try {
-        console.log('Holaaa');
         let countries = await initModel.country.findAll();
 
         if (countries) {

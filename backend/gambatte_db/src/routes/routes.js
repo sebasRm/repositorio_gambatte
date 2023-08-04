@@ -4,7 +4,7 @@ const controllerUser = require('../controllers/userController');
 const controllerAccount = require('../controllers/accountController');
 const controllerDeposit = require('../controllers/depositController');
 const controllerExpenses = require('../controllers/expensesController');
-const controllerBanck = require('../controllers/banckController');
+const controllerBank = require('../controllers/bankController');
 // const upload = require("../libs/storange").default;
 
 const { uploapFile, getImageFile } = require('../services/uploadServices');
@@ -51,10 +51,10 @@ router.get('/api/country/:id', getCountryById);
 
 
 //            =====> RUTAS MODULO BANCK
-router.post('/api/banck', controllerBanck.createBanck);
-router.get('/api/bancks', controllerBanck.findBancks);
-router.get('/api/banck/:idBanck', controllerBanck.findBanckById);
-router.put('/api/banck/:idBanck', controllerBanck.updateBanck);
-router.delete('/api/banck/:idBanck', controllerBanck.deleteBanck);
+router.post('/api/bank', controllerBank.createBank);
+router.get('/api/bank', controllerBank.findBanks);
+router.get('/api/bank/:idBank', controllerBank.findBankById);
+router.put('/api/bank/:idBank', controllerBank.updateBank);
+router.delete('/api/bank/:idBank', controllerBank.deleteBank);
 
 module.exports = { router };

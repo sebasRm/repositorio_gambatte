@@ -8,12 +8,12 @@ const response = require("../helpers/utils").response;
 /// dioccionaro de mensajes y errores
 let initModel = initModels(sequelize);
 
-async function createBanck(req, res) {
-  const { name } = req.body.data.banck;
-  let banckExist = await initModel.bank.findAll({
+async function createBank(req, res) {
+  const { name } = req.body.data.bank;
+  let bankExist = await initModel.bank.findAll({
     where: { name: name },
   });
-  if (banckExist.length > 0) {
+  if (bankExist.length > 0) {
     return response(
       "Error el banco ya se encuentra registrado",
       400,
@@ -22,61 +22,61 @@ async function createBanck(req, res) {
       []
     );
   } else {
-    let banck = await initModel.bank.create({
+    let bank = await initModel.bank.create({
       name: name,
     });
 
-    return response("Banco registrado con exito", 201, res, "ok", banck);
+    return response("Banco registrado con exito", 201, res, "ok", bank);
   }
 }
 
 
-async function findBancks(req, res) {
-    let banckExist = await initModel.bank.findAll({});
-    if (banckExist.length > 0) {
+async function findBanks(req, res) {
+    let bankExist = await initModel.bank.findAll({});
+    if (bankExist.length > 0) {
       return  response(
         "Bancos registrados ....",
         200,
         res,
         "ok",
-        banckExist
+        bankExist
       );
     } else {
       return response("Error al buscar los bancos", 400, res, false, []);
     }
   }
 
-  async function findBanckById(req, res) {
-    const {idBanck}= req.params
-    let banckExist = await initModel.bank.findOne({where:{idBanck:idBanck}});
-    if (banckExist) {
+  async function findBankById(req, res) {
+    const {idBank}= req.params
+    let bankExist = await initModel.bank.findOne({where:{idBank:idBank}});
+    if (bankExist) {
       return  response(
         "Banco registrado ....",
         200,
         res,
         "ok",
-        banckExist
+        bankExist
       );
     } else {
       return response("Error al buscar los bancos", 400, res, false, []);
     }
   }
 
-  async function updateBanck(req, res) {
-    const {idBanck}= req.params
-    const { name } = req.body.data.banck;
+  async function updateBank(req, res) {
+    const {idBank}= req.params
+    const { name } = req.body.data.bank;
     let data = {
         name: name
     }
-    let banckExist = await initModel.bank.update(data,{where:{idBanck:idBanck}});
-    if (banckExist) {
-    let banck = await initModel.bank.findOne({where:{idBanck:idBanck}});
+    let bankExist = await initModel.bank.update(data,{where:{idBank:idBank}});
+    if (bankExist) {
+    let bank = await initModel.bank.findOne({where:{idbank:idBank}});
       return  response(
         "banco actualizado con exito",
         200,
         res,
         "ok",
-        banck
+        bank
       );
     } else {
       return response("Error al actualizar el banco", 400, res, false, []);
@@ -84,11 +84,10 @@ async function findBancks(req, res) {
   }
 
 
-  async function deleteBanck(req, res) {
-    const {idBanck}= req.params
-    let banckExist = await initModel.bank.destroy({where:{idBanck:idBanck}});
-    if (banckExist ==1) {
-    let banck = await initModel.bank.findOne({where:{idBanck:idBanck}});
+  async function deleteBank(req, res) {
+    const {idBank}= req.params
+    let bankExist = await initModel.bank.destroy({where:{idbank:idBank}});
+    if (bankExist ==1) {
       return  response(
         "banco eliminado con exito",
         200,
@@ -103,10 +102,10 @@ async function findBancks(req, res) {
 
 
 module.exports = {
-  createBanck,
-  findBancks,
-  findBanckById,
-  updateBanck,
-  deleteBanck
+  createBank,
+  findBanks,
+  findBankById,
+  updateBank,
+  deleteBank
   
 };

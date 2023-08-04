@@ -25,7 +25,7 @@ async function createDeposit(req, res) {
     const yearCard = await bcrypt.hash(req.cardInfo.expYear, 10);
     const monthCard = await bcrypt.hash(req.cardInfo.month, 10);
 
-    for (card in cards) {
+    for (let card in cards) {
       cardExits = await bcrypt.compare(
         req.cardInfo.cardNumber,
         cards[card].dataValues.cardNumber
