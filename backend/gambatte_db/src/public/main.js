@@ -1,11 +1,6 @@
 const socket =io();
 const deposits = document.querySelector('#deposits')
 
-deposits.addEventListener('submit', e=>{
-    e.preventDefault()
-    console.log("enviando...")
-})
-
 let data = {
     data:
         {
@@ -29,4 +24,11 @@ let data = {
             }
         }
 }
-socket.emit('newDeposit', data)
+
+
+deposits.addEventListener('submit', e=>{
+    e.preventDefault()
+    console.log("enviando...")
+    socket.emit('newDeposit', data)
+})
+

@@ -39,9 +39,9 @@ io.on("connection", async (socket) => {
 
   try {
     //let dataUsers = await notificationsUsers();
-    let dataUsers =await connection.sequelize.query('call gambatte_db.notifications_user();')
+    //let dataUsers =await connection.sequelize.query('call gambatte_db.notifications_user();')
     //console.log("dataUsers", dataUsers);
-    io.emit('notificatios-users', { data: dataUsers });
+   // io.emit('notificatios-users', { data: dataUsers });
   } catch (error) {
     throw error;
   }

@@ -24,3 +24,9 @@ VALUES
  (    'Banorte' ),
 (   'Bangercito' ),
 (    'Bancopel' );
+
+INSERT INTO `user` (`id`, `idUser`, `fullName`, `secondName`, `password`, `email`, `phone`, `documentNumber`, `documentType`, `status`, `statusActive`, `avatar`, `rol_idrol`, `account_idaccount`, `termsAndConditions`, `finishRegister`, `documentImagenFront`, `documentImagenPost`, `indicative`, `postalCode`) VALUES
+(1, 'W74OWAH9', 'Samuel Moreno', NULL, '$2b$10$vfUOk7CnwZh6N2WHqJWM/uoyn/iHwh1f3TDZ0aMgvditUNmoXekXS', 'samuel123@gmail.com', '3159841', '1668844226', 1, 0, NULL, NULL, 1, 1, 1, 1, NULL, NULL, '544', '1544'),
+(2, 'CYW0WGL6', 'Yirleison Palomeque Moreno', NULL, '$2b$10$hCPoTU8mohNXMVQoTzKiB.ziWUSW1m5/pinHhXerpJVcz4ODBNK42', 'sebas123144@bancolombia.com.co', '3053028411', NULL, NULL, 0, NULL, NULL, 1, 4, 1, 0, NULL, NULL, '57', NULL),
+(3, 'V84NU569', 'sebas Moreno', NULL, '$2b$10$q02EhV231PhydPsCKYOyQ.oixmpmO.U6xCor.bmVWmuKXyYv7EwoG', 'sebas1213144@bancolombia.com.co', '3053028411', NULL, NULL, 0, NULL, NULL, 1, 5, 1, 0, NULL, NULL, '57', NULL);
+
