@@ -19,15 +19,16 @@ let data = {
             user:{
                 email:"yirleison@bancolombia.com.co",
                 fullName:"Yirleison Palomeque Moreno",
-                id:1
+                id:2
             }
         
 }
 
-
 deposits.addEventListener('submit', e=>{
     e.preventDefault()
     console.log("enviando...")
+    socket.emit('conectado','conectando desde el cliente')
+
     socket.emit('new-deposit',{data: data})
     socket.on('notificatios-users', data =>{
         console.log("notificactions users", data)

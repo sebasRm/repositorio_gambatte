@@ -4,6 +4,7 @@ const response = require("../helpers/utils").response;
 let initModel = initModels(sequelize);
 const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
+import { getNotificationsUserDepositsExpenses } from "../socket/socket";
 
 /**
  * Funcion para crear un deposito de un usuario
@@ -71,8 +72,8 @@ async function createDeposit(req, res) {
 
     if (deposit) {
       let responses
-  
-        responses=   response("Depósito creado con exito", 201, res, "ok", {deposit:deposit, user:user.dataValues});
+        await getNotificationsUserDepositsExpenses()
+        responses=response("Depósito creado con exito", 201, res, "ok", {deposit:deposit, user:user.dataValues});
 
       return responses
     } else {

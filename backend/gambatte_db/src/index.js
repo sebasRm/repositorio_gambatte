@@ -8,15 +8,14 @@ const accountController =
   require("./controllers/accountController").searchBalance;
 import { Server as WebSocketServer } from "socket.io";
 import http from "http";
-import { notificationsUsers, createDeposit } from "./controllers/notificationController";
-
+import { notificationsUsers} from "./controllers/notificationController";
+import {test, getNotificationsUserDepositsExpenses} from './socket/socket'
 dotenv.config();
 let port = process.env.PORT;
 
 const app = express();
 const server = http.createServer(app);
 const io = new WebSocketServer(server);
-
 
 app.use(express.static(__dirname +'/public'))
 
@@ -28,15 +27,15 @@ const whitelist = [
 // ✅ Enable pre-flight requests
 app.options("*", cors());
 
-io.on("connection", async (socket) => {
+/*io.on("connection", async (socket) => {
   console.log("conectado al socket...")
   socket.on("conectado", async (mensaje) => {
     console.log("Mensaje : ", mensaje);
   });
   socket.on('new-deposit', async (socket) => {
     //console.log("soy el new deposit  =>", socket)
-    createDeposit(socket)
     try {
+      await createDeposit(socket)
       let dataUsers =await connection.sequelize.query('call gambatte_db.notifications_user();')
       io.emit('notificatios-users', { data: dataUsers });
     } catch (error) {
@@ -46,14 +45,14 @@ io.on("connection", async (socket) => {
   })
 
   try {
-   // let dataUsers = await notificationsUsers();
+   //let dataUsers = await notificationsUsers();
     let dataUsers =await connection.sequelize.query('call gambatte_db.notifications_user();')
     //console.log("dataUsers", dataUsers);
     io.emit('notificatios-users', { data: dataUsers });
   } catch (error) {
     throw error;
   }
-});
+});*/
 
 const corsOptions = {
   credentials: true,
@@ -86,7 +85,10 @@ const main = async () => {
   server.listen(port, () => {
     console.log("Server listening port: ", port);
   });
-
+  await getNotificationsUserDepositsExpenses()
+  await test()
   return sequelize;
 };
-main();
+export {io}
+main()
+
