@@ -266,7 +266,7 @@ FROM `gambatte_db`.`user`
 LEFT JOIN `gambatte_db`.`account` ON(`gambatte_db`.`user`.`account_idaccount`=`gambatte_db`.`account`.`idAccount`)
 LEFT JOIN `gambatte_db`.`deposit` ON(`gambatte_db`.`account`.`idAccount`=`gambatte_db`.`deposit`.`account_idaccount`)
 LEFT JOIN `gambatte_db`.`expenses` ON(`gambatte_db`.`account`.`idAccount`=`gambatte_db`. `expenses`.`account_idaccount`)
-group by `user`.`email`;
+group by `gambatte_db`.`user`.`email`;
 END$$
 DELIMITER ;
 
