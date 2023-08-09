@@ -64,6 +64,10 @@ async function findDepositAndExpense(req, res) {
             },
           ],
         },
+        {
+          model: initModel.card,
+          as: "cards",
+        },
       ],
     });
 

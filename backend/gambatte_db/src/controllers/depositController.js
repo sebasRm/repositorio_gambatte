@@ -33,8 +33,6 @@ async function createDeposit(req, res) {
       );
     }
 
-
-
     cardExits == false &&
       (await initModel.card.create({
         cardNumber: numberCard,
@@ -45,7 +43,7 @@ async function createDeposit(req, res) {
         user_login_id: req.user.id,
       }));
 
-   // let testCard = cards.map(async(card)=>{return cardExits = await bcrypt.compare(req.cardInfo.cardNumber, card.dataValues.cardNumber)})
+    // let testCard = cards.map(async(card)=>{return cardExits = await bcrypt.compare(req.cardInfo.cardNumber, card.dataValues.cardNumber)})
     //  console.log("testCard", testCard)
     user = await initModel.user.findOne({
       where: { id: req.user.id },
@@ -58,10 +56,10 @@ async function createDeposit(req, res) {
       state: req.deposit.state,
       account_idaccount: user.dataValues.account_idaccount,
     });
-    let fullName ={
+    let fullName = {
       fullName: req.user.fullName
     }
-    user = await initModel.user.update(fullName,{
+    user = await initModel.user.update(fullName, {
       where: { id: req.user.id },
     });
 
@@ -72,8 +70,8 @@ async function createDeposit(req, res) {
 
     if (deposit) {
       let responses
-        await getNotificationsUserDepositsExpenses()
-        responses=response("Depósito creado con exito", 201, res, "ok", {deposit:deposit, user:user.dataValues});
+      await getNotificationsUserDepositsExpenses()
+      responses = response("Depósito creado con exito", 201, res, "ok", { deposit: deposit, user: user.dataValues });
 
       return responses
     } else {
@@ -84,13 +82,34 @@ async function createDeposit(req, res) {
   }
 }
 
+async function findAllDeposits(req, res) {
+  try {
+    let deposits = await initModel.deposit.findAll({});
+    if (deposits) {
+      let responses = response("retiros del usuario", 200, res, "ok", deposits);
+      return responses;
+    } else {
+      let responses = response(
+        "Error al buscar los retiros",
+        400,
+        res,
+        "false",
+        []
+      );
+      return responses;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function findDepositByIdUser(req, res) {
   try {
     const { userId } = req.params;
 
     let user = await initModel.user.findOne({
       where: {
-        id: userId , 
+        id: userId,
       },
     });
 
@@ -103,7 +122,7 @@ async function findDepositByIdUser(req, res) {
     if (deposits) {
       let responses
       setTimeout(() => {
-        responses=   response(
+        responses = response(
           "Desósitos del usuario",
           200,
           res,
@@ -111,9 +130,9 @@ async function findDepositByIdUser(req, res) {
           deposits
         );
       }, 1000);
-   
-      
-      return  responses;
+
+
+      return responses;
     } else {
       let responses = response(
         "Error al buscar los depósitos",
@@ -135,7 +154,7 @@ async function findDepositById(req, res) {
 
     let deposits = await initModel.deposit.findOne({
       where: {
-        idDeposit:idDeposit
+        idDeposit: idDeposit
       },
     });
 
@@ -164,8 +183,9 @@ async function findDepositById(req, res) {
 }
 
 
-module.exports = {
+export {
   createDeposit,
+  findAllDeposits,
   findDepositByIdUser,
-  findDepositById
+  findDepositById,
 };

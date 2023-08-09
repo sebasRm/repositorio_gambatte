@@ -125,6 +125,10 @@ async function userLogin(req, res) {
           model: initModel.rol,
           as: "rol_",
         },
+        {
+          model: initModel.account,
+          as: "account_",
+        }
       ],
       attributes: [
         "id",
@@ -270,12 +274,11 @@ async function updatePasswordUserLogin(req, res) {
 /// optimización de img
 //// obtener img ruta
 
-const validateFile=async (files)=>{
+const validateFile = async (files) => {
   return new Promise(async (resolve, reject) => {
-    if(files.length>0)
-    {
+    if (files.length > 0) {
       resolve(true)
-    }else{
+    } else {
       reject(false)
     }
 
@@ -416,7 +419,7 @@ async function updateFinishRegisterUser(req, res) {
 
 async function findUser(req, res) {
   try {
-    const {role} = req.headers
+    const { role } = req.headers
     const { userId } = req.params;
     let user = await initModel.user.findOne({
       where: { id: userId },
@@ -429,11 +432,10 @@ async function findUser(req, res) {
           model: initModel.account,
           as: "account_",
         },
-   
+
       ],
     });
-    if(role =='User')
-    {
+    if (role == 'User') {
       delete user.dataValues.documentNumber
       delete user.dataValues.documentType
       delete user.dataValues.statusActive
@@ -459,28 +461,29 @@ async function findUser(req, res) {
 
 async function findUsers(req, res) {
   try {
-    const {role} = req.headers
+    const { role } = req.headers
 
-    let users = await initModel.user.findAll({include: [
-      {
-        model: initModel.rol,
-        as: "rol_",
-      },
-      {
-        model: initModel.account,
-        as: "account_",
-      },
- 
-    ],});
+    let users = await initModel.user.findAll({
+      include: [
+        {
+          model: initModel.rol,
+          as: "rol_",
+        },
+        {
+          model: initModel.account,
+          as: "account_",
+        },
+
+      ],
+    });
     if (users) {
 
-      users.map((user)=>{
+      users.map((user) => {
         delete user.dataValues.password;
         user.dataValues.role = user.dataValues.rol_.dataValues.role;
         delete user.dataValues.rol_idrol
         delete user.dataValues.rol_
-        if(role =='User')
-        {
+        if (role == 'User') {
           delete user.dataValues.documentNumber
           delete user.dataValues.documentType
           delete user.dataValues.statusActive
@@ -520,7 +523,7 @@ async function validateEmail(req, res) {
 }
 
 
-async function updateDocuments(req, res){
+async function updateDocuments(req, res) {
 
 }
 

@@ -9,6 +9,12 @@ const findUserByIdService = async (idUser) => {
         try {
             const user = await initModel.user.findOne({
                 where: { id: idUser },
+                include: [
+                    {
+                        model: initModel.account,
+                        as: "account_",
+                    }
+                ],
             });
             if (user) {
                 delete user.dataValues.password

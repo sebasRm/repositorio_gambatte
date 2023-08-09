@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { findUserByIdService } = require("../services/userService");
 const response = require("../helpers/utils").response;
 
 module.exports.authenticateToken = (req, res, next) => {
@@ -41,12 +42,13 @@ module.exports.verifyTokenSision = (req, res) => {
   if (token == null) {
     return res.status(401).send({ Authorization: false, message: "Forbidden" });
   }
-  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+  jwt.verify(token, process.env.SECRET_KEY, async (err, user) => {
     if (err) {
       return res
         .status(401)
         .send({ Authorization: false, message: "El token es invalido" });
     }
+    console.log('llego', user);
     req.user = user;
     let {
       id,
@@ -58,18 +60,20 @@ module.exports.verifyTokenSision = (req, res) => {
       finishRegister,
       role,
     } = req.user.sub;
-    return response("El token es valido", 200, res, "ok", {
-      user: {
-        id,
-        idUser,
-        fullName,
-        email,
-        avatar,
-        termsAndConditions,
-        finishRegister,
-        role,
-      },
-      Authorization: true,
-    });
+    try {
+      let getUser = await findUserByIdService(id)
+      // console.log('hola', getUser.dataValues.account_);
+      if (getUser) {
+        return response("El token es valido", 200, res, "ok", {
+          user: {
+            role,
+            ...getUser.dataValues
+          },
+          Authorization: true,
+        });
+      }
+    } catch (error) {
+      console.log('Mostrando el error', error);
+    }
   });
 };
