@@ -38,10 +38,12 @@ router.post('/api/user/logout', controllerUser.userLogout);
 //            =====>RUTAS MODULO DEPOSITOS
 router.post('/api/deposit', controllerDeposit.createDeposit);
 router.get('/api/deposit/:userId', controllerDeposit.findDepositByIdUser);
+router.get('/api/deposits', controllerDeposit.findAllDeposits);
 router.get('/api/deposit/id/:idDeposit', controllerDeposit.findDepositById);
 
 //            =====> RUTAS MODULO RETIROS
 router.post('/api/expenses', controllerExpenses.createExpenses);
+router.get('/api/expenses', controllerExpenses.findAllExpenses);
 router.get('/api/expenses/:userId', controllerExpenses.findExpensesByUserId);
 router.get('/api/expenses/id/:idExpenses', controllerExpenses.findExpensesById);
 

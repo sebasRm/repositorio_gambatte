@@ -5,6 +5,27 @@ let initModel = initModels(sequelize);
 const bcrypt = require("bcrypt");
 const { Op, Model } = require("sequelize");
 
+async function findAllExpenses(req, res) {
+  try {
+    let expenses = await initModel.expenses.findAll({});
+    if (expenses) {
+      let responses = response("retiros del usuario", 200, res, "ok", expenses);
+      return responses;
+    } else {
+      let responses = response(
+        "Error al buscar los retiros",
+        400,
+        res,
+        "false",
+        []
+      );
+      return responses;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 async function findExpensesByUserId(req, res) {
   // Aqui se dede de hace un join debido a que se puede llegar a expenses com usuarios -> cuenta -> expenses
   try {
@@ -13,11 +34,11 @@ async function findExpensesByUserId(req, res) {
       where: {
         id: userId,
       },
-      include : [
+      include: [
         {
           model: initModel.account,
           as: "account_",
-          include:[
+          include: [
             {
               model: initModel.expenses,
               as: "expenses",
@@ -68,6 +89,7 @@ async function findExpensesById(req, res) {
 }
 
 async function createExpenses(req, res) {
+  console.log('Llego la peticon a expenses controller ', req.body.data.expenses);
   try {
     const { id, idUser, fullName, email } = req.body.data.user;
     const { bank, keyAccount, amount, swiftCode } = req.body.data.expenses;
@@ -104,7 +126,8 @@ async function createExpenses(req, res) {
 }
 
 module.exports = {
-  findExpensesByUserId,
   createExpenses,
+  findAllExpenses,
+  findExpensesByUserId,
   findExpensesById,
 };
