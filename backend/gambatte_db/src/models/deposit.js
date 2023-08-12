@@ -30,6 +30,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'account',
         key: 'idAccount'
       }
+    },
+    idCard: {
+      type: DataTypes.INTEGER,
+      allowNull: true
     }
   }, {
     sequelize,

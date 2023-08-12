@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "bc20b1d0-034f-49d3-b5d2-dbcb996cbe99",
+		"_postman_id": "a81605e1-524b-441c-9f1d-b1a803e69c7c",
 		"name": "gambatte",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -359,12 +359,18 @@
 					"response": []
 				},
 				{
-					"name": "api-account-deposit-expense",
+					"name": "api-validate-token",
 					"request": {
-						"method": "GET",
-						"header": [],
+						"method": "POST",
+						"header": [
+							{
+								"key": "authorization",
+								"value": "Bearer \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOnsiaWQiOjMsImlkVXNlciI6IlY4NE5VNTY5IiwiZnVsbE5hbWUiOiJzZWJhcyBNb3Jlbm8iLCJlbWFpbCI6InNlYmFzMTIxMzE0NEBiYW5jb2xvbWJpYS5jb20uY28iLCJhdmF0YXIiOm51bGwsInRlcm1zQW5kQ29uZGl0aW9ucyI6MSwiZmluaXNoUmVnaXN0ZXIiOjAsImFjY291bnRfIjp7ImlkQWNjb3VudCI6NSwiYmFsYW5jZSI6MH0sInJvbGUiOiJBZG1pbiJ9LCJpYXQiOjE2OTE2MjU3NzIsImV4cCI6MTY5MTYyNzU3Mn0.liX2KJtde0lZBujQAbj9Anv28273C7r9M1sc7FmjYtg\"",
+								"type": "default"
+							}
+						],
 						"url": {
-							"raw": "http://localhost:4000/api/account/deposit/expense/1",
+							"raw": "http://localhost:4000/api/validate/token",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -372,10 +378,8 @@
 							"port": "4000",
 							"path": [
 								"api",
-								"account",
-								"deposit",
-								"expense",
-								"1"
+								"validate",
+								"token"
 							]
 						}
 					},
@@ -392,7 +396,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:4000/api/account?userId=1",
+							"raw": "http://localhost:4000/api/account/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -400,12 +404,14 @@
 							"port": "4000",
 							"path": [
 								"api",
-								"account"
+								"account",
+								"1"
 							],
 							"query": [
 								{
 									"key": "userId",
-									"value": "1"
+									"value": "1",
+									"disabled": true
 								}
 							]
 						}
@@ -424,7 +430,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"data\":\r\n        {\r\n            \"cardInfo\":{\r\n                \"cardNumber\":\"4894 4542 2316\",\r\n                \"ccv\":\"343\",\r\n                \"expYear\":\"28\",\r\n                \"month\":\"05\",\r\n                \"termAndConditions\":true\r\n            },\r\n            \"deposit\":{\r\n                \"amount\":600,\r\n                \"depositDate\":\"2023-06-06\",\r\n                \"ecommerce\":\"\",\r\n                \"state\":1\r\n            },\r\n            \"user\":{\r\n                \"email\":\"yirleison@bancolombia.com.co\",\r\n                \"fullName\":\"Yirleison Palomeque Moreno\",\r\n                \"id\":1\r\n            }\r\n        }\r\n}",
+							"raw": "{\r\n    \"data\":\r\n        {\r\n            \"cardInfo\":{\r\n                \"cardNumber\":\"4894 4542 2316\",\r\n                \"ccv\":\"343\",\r\n                \"expYear\":\"28\",\r\n                \"month\":\"05\",\r\n                \"termAndConditions\":true\r\n            },\r\n            \"deposit\":{\r\n                \"amount\":600,\r\n                \"depositDate\":\"2023-06-06\",\r\n                \"ecommerce\":\"\",\r\n                \"state\":0\r\n            },\r\n            \"user\":{\r\n                \"email\":\"yirleison@bancolombia.com.co\",\r\n                \"fullName\":\"Yirleison Palomeque Moreno\",\r\n                \"id\":1\r\n            }\r\n        }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -673,6 +679,56 @@
 								"api",
 								"bank",
 								"7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "generals_filters",
+			"item": [
+				{
+					"name": "api-account-deposit-expense-by-id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/account/deposit/expense/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"account",
+								"deposit",
+								"expense",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api-account-deposit-expense",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:4000/api/account/deposit/expense",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"account",
+								"deposit",
+								"expense"
 							]
 						}
 					},

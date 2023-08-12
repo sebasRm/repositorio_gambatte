@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const CryptoJS = require('crypto-js');
 const moment = require("moment");
 require("dotenv").config();
 
@@ -15,6 +16,12 @@ function generateToken(user) {
   };
   return jwt.sign(payload, process.env.SECRET_KEY);
 }
+
+function generateCardToken(card) {
+  var encrypted = CryptoJS.AES.encrypt(card, 'secret-88').toString();
+  return encrypted
+}
+
 
 function generateRandomIdUser(num) {
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -53,4 +60,4 @@ class staticVar {
   static USER_UPDATE_AVATAR_ERROR_METHOD =
     "error method ==> updateAvatarUserLogin";
 }
-module.exports = { staticVar, response, generateRandomIdUser, generateToken, initModel };
+module.exports = { staticVar, response, generateRandomIdUser, generateToken, initModel, generateCardToken };

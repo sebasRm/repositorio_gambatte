@@ -55,7 +55,7 @@ async function createUser(req, res) {
           account_idaccount: account.dataValues.idAccount,
           termsAndConditions: req.user.termAndConditions,
           registerStatus: true,
-          status: false,
+          status: true,
           finishRegister: false,
           indicative: req.user.indicative
         });
@@ -147,7 +147,6 @@ async function userLogin(req, res) {
       if (login) {
         user.dataValues.role = user.dataValues.rol_.dataValues.role;
         delete user.dataValues.rol_
-
         const dataUser = {
           user: user,
           accessToken: generateToken(user),

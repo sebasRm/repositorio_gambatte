@@ -5,6 +5,8 @@ let initModel = initModels(sequelize);
 const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
 import { getNotificationsUserDepositsExpenses } from "../socket/socket";
+import { generateCardToken } from "../helpers/utils";
+import { verifyTokenCard } from "../middleware/verfyOauth";
 
 /**
  * Funcion para crear un deposito de un usuario
@@ -14,37 +16,54 @@ async function createDeposit(req, res) {
   let cards;
   let user;
   let cardExits = false;
+  let cardCreate;
+  let idCard
   try {
     req = req.body.data;
-
+    let card = req.cardInfo;
     cards = await initModel.card.findAll({
       where: { user_login_id: req.user.id },
     });
 
-    const numberCard = await bcrypt.hash(req.cardInfo.cardNumber, 10);
-    const ccvCard = await bcrypt.hash(req.cardInfo.ccv, 10);
-    const yearCard = await bcrypt.hash(req.cardInfo.expYear, 10);
-    const monthCard = await bcrypt.hash(req.cardInfo.month, 10);
+    let cardToken = generateCardToken(card.cardNumber)
+    let cvvToken = generateCardToken(card.ccv)
+    let expYearToken = generateCardToken(card.expYear)
+    let monthToken = generateCardToken(card.month)
 
-    for (let card in cards) {
-      cardExits = await bcrypt.compare(
-        req.cardInfo.cardNumber,
-        cards[card].dataValues.cardNumber
-      );
+    if(cards.length>0)
+    {
+      for (let card in cards) {
+        let  tokenCard = cards[card]
+        let token =await verifyTokenCard(tokenCard.dataValues.cardNumber)
+        console.log("token", token)
+        if(card.cardNumber === token)
+        {
+          idCard = tokenCard.dataValues.idCard
+          cardExits = false;
+        }
+        cardExits = true;
+      }
     }
-
-    cardExits == false &&
-      (await initModel.card.create({
-        cardNumber: numberCard,
-        cvv: ccvCard,
-        expYear: yearCard,
-        month: monthCard,
-        termAndConditions: req.cardInfo.termAndConditions,
+    else{
+      cardCreate=await initModel.card.create({
         user_login_id: req.user.id,
-      }));
+        cardNumber: cardToken,
+        cvv :cvvToken,
+        expYear:expYearToken,
+        month:monthToken,
+        termAndConditions: card.termAndConditions
+      })
+    }
+   
 
-    // let testCard = cards.map(async(card)=>{return cardExits = await bcrypt.compare(req.cardInfo.cardNumber, card.dataValues.cardNumber)})
-    //  console.log("testCard", testCard)
+   /* cardExits === false ?
+      cardCreate=await initModel.card.create({
+        user_login_id: req.user.id,
+        cardToken: cardToken
+      }): cardCreate=await initModel.card.findOne({where:{cardToken: cardToken}})*/
+    
+    //console.log("cardCreate", cardCreate)
+
     user = await initModel.user.findOne({
       where: { id: req.user.id },
     });
@@ -55,6 +74,7 @@ async function createDeposit(req, res) {
       ecommerce: req.deposit.ecommerce,
       state: req.deposit.state,
       account_idaccount: user.dataValues.account_idaccount,
+      idCard : idCard ? idCard : cardCreate.dataValues.idCard
     });
     let fullName = {
       fullName: req.user.fullName

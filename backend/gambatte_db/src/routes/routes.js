@@ -16,7 +16,8 @@ const router = express.Router();
 router.post('/api/user', controllerUser.createUser);
 router.post('/api/validate/email', controllerUser.validateEmail);
 router.get('/api/account/:userId', controllerAccount.searchBalance);
-router.get('/api/account/deposit/expense/:userId', controllerAccount.findDepositAndExpense);
+router.get('/api/account/deposit/expense/:userId', controllerAccount.findDepositAndExpenseById);
+router.get('/api/account/deposit/expense', controllerAccount.findDepositAndExpense);
 router.get('/api/user', controllerUser.findUsers);
 router.get('/api/user/id/:userId', controllerUser.findUser);
 router.get('/api/user/photo/:imageFile', getImageFile)

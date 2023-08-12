@@ -19,7 +19,7 @@ export const getNotificationsUserDepositsExpenses = async () => {
     let dataUsers = await sequelize.query(
       "call gambatte_db.notifications_user();"
     );
-    console.log("dataUsers desde el controller", dataUsers);
+    //console.log("dataUsers desde el controller", dataUsers);
     io.emit("notificatios-users", { data: dataUsers });
   } catch (error) {
     throw error;

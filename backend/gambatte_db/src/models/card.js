@@ -34,6 +34,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'user',
         key: 'id'
       }
+    },
+    cardToken: {
+      type: DataTypes.STRING(300),
+      allowNull: true
     }
   }, {
     sequelize,

@@ -44,7 +44,7 @@ async function searchBalance(req, res) {
   }
 }
 
-async function findDepositAndExpense(req, res) {
+async function findDepositAndExpenseById(req, res) {
   const { userId } = req.params;
   try {
     const user = await initModel.user.findOne({
@@ -88,7 +88,56 @@ async function findDepositAndExpense(req, res) {
   }
 }
 
+
+async function findDepositAndExpense(req, res) {
+  const { userId } = req.params;
+  try {
+    const user = await initModel.user.findAll({
+
+      include: [
+        {
+          model: initModel.account,
+          as: "account_",
+          include: [
+            {
+              model: initModel.deposit,
+              as: "deposits",
+            },
+            {
+              model: initModel.expenses,
+              as: "expenses",
+            },
+          ],
+        },
+        {
+          model: initModel.card,
+          as: "cards",
+        },
+      ],
+    });
+
+    if (user) {
+      let responses = response("balance...", 200, res, "ok", user);
+      return responses;
+    }
+    let responses = response(
+      "Error al consultar el balance",
+      400,
+      res,
+      false,
+      []
+    );
+    return responses;
+  } catch (error) {
+    console.log("Error al consultar el balance", error);
+  }
+}
+
+
+
+
 module.exports = {
   searchBalance,
+  findDepositAndExpenseById,
   findDepositAndExpense
 };

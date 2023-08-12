@@ -1,6 +1,10 @@
 const jwt = require("jsonwebtoken");
 const { findUserByIdService } = require("../services/userService");
+const { initModel } = require("../helpers/utils");
 const response = require("../helpers/utils").response;
+import { promisifyAll } from 'bluebird';
+const CryptoJS = require('crypto-js');
+promisifyAll(jwt);
 
 module.exports.authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
@@ -28,7 +32,6 @@ module.exports.authenticateToken = (req, res, next) => {
 
 module.exports.verifyTokenSision = (req, res) => {
   const authHeader = req.headers["authorization"];
-
   let token;
   if (!authHeader) {
     return res.status(401).send({
@@ -76,4 +79,16 @@ module.exports.verifyTokenSision = (req, res) => {
       console.log('Mostrando el error', error);
     }
   });
+};
+
+
+
+module.exports.verifyTokenCard =async (cards) => {
+  try {
+   const bytes  = CryptoJS.AES.decrypt(cards, 'secret-88');
+   const originalCard = bytes.toString(CryptoJS.enc.Utf8);
+   return originalCard
+  } catch (e) {
+    throw e;
+  }
 };
