@@ -39,6 +39,17 @@ async function createDeposit(req, res) {
         {
           idCard = tokenCard.dataValues.idCard
         }
+        else
+        {
+          cardCreate=await initModel.card.create({
+            user_login_id: req.user.id,
+            cardNumber: cardToken,
+            cvv :cvvToken,
+            expYear:expYearToken,
+            month:monthToken,
+            termAndConditions: cardUser.termAndConditions
+          })
+        }
       }
     }
     else{
@@ -52,15 +63,6 @@ async function createDeposit(req, res) {
       })
     }
    
-
-   /* cardExits === false ?
-      cardCreate=await initModel.card.create({
-        user_login_id: req.user.id,
-        cardToken: cardToken
-      }): cardCreate=await initModel.card.findOne({where:{cardToken: cardToken}})*/
-    
-    //console.log("cardCreate", cardCreate)
-
     user = await initModel.user.findOne({
       where: { id: req.user.id },
     });
@@ -199,6 +201,10 @@ async function findDepositById(req, res) {
   }
 }
 
+
+async function updateDeposit(req, res) {
+
+}
 
 export {
   createDeposit,
