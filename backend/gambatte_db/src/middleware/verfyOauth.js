@@ -85,7 +85,7 @@ module.exports.verifyTokenSision = (req, res) => {
 
 module.exports.verifyTokenCard =async (cards) => {
   try {
-   const bytes  = CryptoJS.AES.decrypt(cards, 'secret-88');
+   const bytes  = CryptoJS.AES.decrypt(cards, process.env.SECRET_KEY);
    const originalCard = bytes.toString(CryptoJS.enc.Utf8);
    return originalCard
   } catch (e) {
