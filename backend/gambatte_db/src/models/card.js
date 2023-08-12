@@ -35,10 +35,6 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    cardToken: {
-      type: DataTypes.STRING(300),
-      allowNull: true
-    }
   }, {
     sequelize,
     tableName: 'card',
