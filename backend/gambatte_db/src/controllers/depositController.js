@@ -35,15 +35,10 @@ async function createDeposit(req, res) {
       for (let card in cards) {
         let  tokenCard = cards[card]
         let token =await verifyTokenCard(tokenCard.dataValues.cardNumber)
-        console.log("card.cardNumber ", card.cardNumber)
-        console.log("ctoken ",token)
         if(cardUser.cardNumber === token)
         {
-          console.log("soy verdero", token)
           idCard = tokenCard.dataValues.idCard
-          cardExits = false;
         }
-        cardExits = true;
       }
     }
     else{
@@ -53,7 +48,7 @@ async function createDeposit(req, res) {
         cvv :cvvToken,
         expYear:expYearToken,
         month:monthToken,
-        termAndConditions: card.termAndConditions
+        termAndConditions: cardUser.termAndConditions
       })
     }
    
