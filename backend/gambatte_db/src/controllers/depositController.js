@@ -20,24 +20,26 @@ async function createDeposit(req, res) {
   let idCard
   try {
     req = req.body.data;
-    let card = req.cardInfo;
+    let cardUser = req.cardInfo;
     cards = await initModel.card.findAll({
       where: { user_login_id: req.user.id },
     });
 
-    let cardToken = generateCardToken(card.cardNumber)
-    let cvvToken = generateCardToken(card.ccv)
-    let expYearToken = generateCardToken(card.expYear)
-    let monthToken = generateCardToken(card.month)
+    let cardToken = generateCardToken(cardUser.cardNumber)
+    let cvvToken = generateCardToken(cardUser.ccv)
+    let expYearToken = generateCardToken(cardUser.expYear)
+    let monthToken = generateCardToken(cardUser.month)
 
     if(cards.length>0)
     {
       for (let card in cards) {
         let  tokenCard = cards[card]
         let token =await verifyTokenCard(tokenCard.dataValues.cardNumber)
-        console.log("token", token)
-        if(card.cardNumber === token)
+        console.log("card.cardNumber ", card.cardNumber)
+        console.log("ctoken ",token)
+        if(cardUser.cardNumber === token)
         {
+          console.log("soy verdero", token)
           idCard = tokenCard.dataValues.idCard
           cardExits = false;
         }
