@@ -4,9 +4,10 @@ const response = require("../helpers/utils").response;
 let initModel = initModels(sequelize);
 const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
-import { getNotificationsUserDepositsExpenses } from "../socket/socket";
+import { emitNotificationCreationDepositExpenses, getNotificationsUserDepositsExpenses, getNotificationsUserDepositsExpenses1 } from "../socket/socket";
 import { generateCardToken } from "../helpers/utils";
 import { verifyTokenCard } from "../middleware/verfyOauth";
+import deposit from "../models/deposit";
 
 /**
  * Funcion para crear un deposito de un usuario
@@ -17,61 +18,72 @@ async function createDeposit(req, res) {
   let user;
   let cardExits = false;
   let cardCreate;
+  let findCard;
   let idCard
+  // console.log('data ================ >', req.body.data);
+  let { user: userReq, cardInfo, deposit } = req.body.data
+
+  // console.log('userReq ================ >', userReq.id);
+
   try {
     req = req.body.data;
     let cardUser = req.cardInfo;
     cards = await initModel.card.findAll({
-      where: { user_login_id: req.user.id },
+      where: { user_login_id: userReq.id },
     });
 
-    let cardToken = generateCardToken(cardUser.cardNumber)
-    let cvvToken = generateCardToken(cardUser.ccv)
-    let expYearToken = generateCardToken(cardUser.expYear)
-    let monthToken = generateCardToken(cardUser.month)
+    let cardToken = generateCardToken(cardInfo.cardNumber)
+    let cvvToken = generateCardToken(cardInfo.ccv)
+    let expYearToken = generateCardToken(cardInfo.expYear)
+    let monthToken = generateCardToken(cardInfo.month)
 
-    if(cards.length>0)
-    {
+    if (cards.length > 0) {
       for (let card in cards) {
-        let  tokenCard = cards[card]
-        let token =await verifyTokenCard(tokenCard.dataValues.cardNumber)
-        if(cardUser.cardNumber === token)
-        {
+        let tokenCard = cards[card]
+        // console.log(tokenCard.dataValues);
+        let token = await verifyTokenCard(tokenCard?.dataValues?.cardNumber)
+        if (cardInfo.cardNumber === token) {
           idCard = tokenCard.dataValues.idCard
         }
       }
     }
-    else{
-      cardCreate=await initModel.card.create({
-        user_login_id: req.user.id,
+
+    else {
+      cardCreate = await initModel.card.create({
+        user_login_id: userReq.id,
         cardNumber: cardToken,
-        cvv :cvvToken,
-        expYear:expYearToken,
-        month:monthToken,
+        cvv: cvvToken,
+        expYear: expYearToken,
+        month: monthToken,
         termAndConditions: cardUser.termAndConditions
       })
     }
-   
+    /* cardExits === false ?
+       cardCreate=await initModel.card.create({
+         user_login_id: req.user.id,
+         cardToken: cardToken
+       }): cardCreate=await initModel.card.findOne({where:{cardToken: cardToken}})*/
 
-   /* cardExits === false ?
-      cardCreate=await initModel.card.create({
-        user_login_id: req.user.id,
-        cardToken: cardToken
-      }): cardCreate=await initModel.card.findOne({where:{cardToken: cardToken}})*/
-    
+    if (cardCreate) {
+      findCard = cardCreate
+      console.log('Mostrando los datos de la creacion tarjeta :', cardCreate, findCard);
+      // findCard = await initModel.card.findOne({
+      //   where: { user_login_id: userReq.id },
+      // });
+    }
     //console.log("cardCreate", cardCreate)
 
     user = await initModel.user.findOne({
-      where: { id: req.user.id },
+      where: { id: userReq.id },
     });
 
-    let deposit = await initModel.deposit.create({
-      amount: req.deposit.amount,
-      depositDate: req.deposit.depositDate,
-      ecommerce: req.deposit.ecommerce,
-      state: req.deposit.state,
+    let createDeposit = await initModel.deposit.create({
+      amount: deposit.amount,
+      depositDate: deposit.depositDate,
+      ecommerce: deposit.ecommerce,
+      state: deposit.state,
       account_idaccount: user.dataValues.account_idaccount,
-      idCard : idCard ? idCard : cardCreate.dataValues.idCard
+      idCard: idCard ? idCard : findCard.dataValues.idCard
     });
     let fullName = {
       fullName: req.user.fullName
@@ -85,17 +97,19 @@ async function createDeposit(req, res) {
     });
     delete user.dataValues.password
 
-    if (deposit) {
+    if (createDeposit) {
       let responses
-      await getNotificationsUserDepositsExpenses()
-      responses = response("Depósito creado con exito", 201, res, "ok", { deposit: deposit, user: user.dataValues });
+      await getNotificationsUserDepositsExpenses1()
+      await emitNotificationCreationDepositExpenses(`${req.user.fullName} ha solicitado un depósito.`)
+      responses = response("Depósito creado con exito", 201, res, "ok", { deposit: createDeposit, user: user.dataValues });
 
       return responses
     } else {
       return response("Error al crear el depósito", 400, res, "false", []);
     }
   } catch (error) {
-    throw error;
+    console.log(error);
+    return response("Error al crear el depósito", 400, res, "false", []);
   }
 }
 

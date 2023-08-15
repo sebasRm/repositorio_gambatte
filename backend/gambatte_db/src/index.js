@@ -8,16 +8,17 @@ const accountController =
   require("./controllers/accountController").searchBalance;
 import { Server as WebSocketServer } from "socket.io";
 import http from "http";
-import { notificationsUsers} from "./controllers/notificationController";
-import {test, getNotificationsUserDepositsExpenses} from './socket/socket'
+import { notificationsUsers } from "./controllers/notificationController";
+import { test, getNotificationsUserDepositsExpenses, connected } from './socket/socket'
 dotenv.config();
 let port = process.env.PORT;
 
 const app = express();
 const server = http.createServer(app);
-const io = new WebSocketServer(server);
 
-app.use(express.static(__dirname +'/public'))
+const io = new WebSocketServer(server, { path: "/socket/gambatte", cors: { origin: "*" } });
+
+app.use(express.static(__dirname + '/public'))
 
 const whitelist = [
   "http://localhost:3000",
@@ -87,8 +88,9 @@ const main = async () => {
   });
   await getNotificationsUserDepositsExpenses()
   await test()
+
   return sequelize;
 };
-export {io}
+export { io }
 main()
 

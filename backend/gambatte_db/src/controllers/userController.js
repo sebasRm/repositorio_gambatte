@@ -472,7 +472,10 @@ async function findUsers(req, res) {
           model: initModel.account,
           as: "account_",
         },
-
+        {
+          model: initModel.card,
+          as: "cards",
+        },
       ],
     });
     if (users) {
