@@ -168,19 +168,21 @@ async function findDepositByIdUser(req, res) {
   }
 }
 
+
+
 async function findDepositById(req, res) {
   try {
     const { idDeposit } = req.params;
 
     let deposits = await initModel.deposit.findOne({
       where: {
-        idDeposit: idDeposit
+        idDeposit: idDeposit,
       },
     });
 
     if (deposits) {
       let responses = response(
-        "Desósito del usuario",
+        "Despósito del usuario",
         200,
         res,
         "ok",
@@ -202,7 +204,6 @@ async function findDepositById(req, res) {
   }
 }
 
-
 async function updateDepositAndExpenses(req, res) {
   let data;
   let dataDeposit = false;
@@ -211,6 +212,7 @@ async function updateDepositAndExpenses(req, res) {
   dataDeposit
     ? (data = req.body.data.paymentDeposit)
     : (data = req.body.data.paymentExpense);
+
   let {
     idUser,
     typeOperation,
@@ -221,6 +223,7 @@ async function updateDepositAndExpenses(req, res) {
     description,
   } = data;
   let user;
+
   if (description == "") {
     user = await initModel.user.findOne({
       include: [
@@ -231,7 +234,9 @@ async function updateDepositAndExpenses(req, res) {
       ],
       where: { id: idUser },
     });
+
     let balanceUser = user.dataValues.account_.dataValues.balance;
+
     if (dataDeposit == false) {
       if (amount > balanceUser) {
         return response(
@@ -243,29 +248,36 @@ async function updateDepositAndExpenses(req, res) {
         );
       }
     }
+
     let transaction = await initModel.transaction.create({
       date: paymentDate,
       transactionType: dataDeposit ? "Deposit" : "Expense",
       transactionNumber: idOperation,
       amount: amount,
-      state: state,
+      status: state,
       user_login_id: user.dataValues.id,
     });
-    let despositUpdate = await initModel.deposit.update(state, {
-      where: { idDeposit: idOperation },
-    });
+
     if (dataDeposit) {
+      let despositUpdate = await initModel.deposit.update({state:state}, {
+        where: { idDeposit: idOperation },
+      });
       newBalance = {
         balance: balanceUser + amount,
       };
     } else {
+      let expenseUpdate = await initModel.expenses.update({state:state}, {
+        where: { idExpenses: idOperation },
+      });
       newBalance = {
         balance: balanceUser - amount,
       };
     }
+
     let balanceUpdate = await initModel.account.update(newBalance, {
       where: { idAccount: user.dataValues.account_idaccount },
     });
+
     let userUpdate = await initModel.user.findOne({
       include: [
         {
@@ -275,7 +287,7 @@ async function updateDepositAndExpenses(req, res) {
       ],
       where: { id: idUser },
     });
-    await getPaymentsNotificationsUser()
+    getNotificationsUserDepositsExpense()
     if (userUpdate) {
       return response(
         "Despósito aceptado con exito",
@@ -294,7 +306,7 @@ async function updateDepositAndExpenses(req, res) {
       }
       let depositUpdate = await initModel.deposit.update(newDeposit,{where:{idDeposit:idOperation}})
       let deposit = await initModel.deposit.findOne({where:{idDeposit:idOperation}})
-      await getPaymentsNotificationsUser()
+      
       if(deposit)
       {
         return response(
@@ -305,6 +317,7 @@ async function updateDepositAndExpenses(req, res) {
           deposit
         );
       }
+    
     }
     else{
       let newExpense = {
@@ -313,7 +326,8 @@ async function updateDepositAndExpenses(req, res) {
       }
       let expenseUpdate = await initModel.expenses.update(newExpense,{where:{idExpenses:idOperation}})
       let expense = await initModel.expenses.findOne({where:{idExpenses:idOperation}})
-      await getPaymentsNotificationsUser()
+      
+     
       if(expense)
       {
         return response(
@@ -328,6 +342,7 @@ async function updateDepositAndExpenses(req, res) {
     }
   }
 }
+
 
 export {
   createDeposit,
