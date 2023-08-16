@@ -34,6 +34,10 @@ module.exports = function(sequelize, DataTypes) {
     idCard: {
       type: DataTypes.INTEGER,
       allowNull: true
+    },
+    description: {
+      type: DataTypes.STRING(100),
+      allowNull: true
     }
   }, {
     sequelize,

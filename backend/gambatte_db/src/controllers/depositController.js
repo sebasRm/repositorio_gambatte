@@ -203,8 +203,127 @@ async function findDepositById(req, res) {
 }
 
 
-async function updateDeposit(req, res) {
-
+async function updateDepositAndExpenses(req, res) {
+  let data;
+  let dataDeposit = false;
+  let newBalance;
+  req.body.data.paymentDeposit ? (dataDeposit = true) : (dataDeposit = false);
+  dataDeposit
+    ? (data = req.body.data.paymentDeposit)
+    : (data = req.body.data.paymentExpense);
+  let {
+    idUser,
+    typeOperation,
+    idOperation,
+    paymentDate,
+    amount,
+    state,
+    description,
+  } = data;
+  let user;
+  if (description == "") {
+    user = await initModel.user.findOne({
+      include: [
+        {
+          model: initModel.account,
+          as: "account_",
+        },
+      ],
+      where: { id: idUser },
+    });
+    let balanceUser = user.dataValues.account_.dataValues.balance;
+    if (dataDeposit == false) {
+      if (amount > balanceUser) {
+        return response(
+          "No cuenta con el suficiente saldo para realizar el retiro",
+          400,
+          res,
+          false,
+          []
+        );
+      }
+    }
+    let transaction = await initModel.transaction.create({
+      date: paymentDate,
+      transactionType: dataDeposit ? "Deposit" : "Expense",
+      transactionNumber: idOperation,
+      amount: amount,
+      state: state,
+      user_login_id: user.dataValues.id,
+    });
+    let despositUpdate = await initModel.deposit.update(state, {
+      where: { idDeposit: idOperation },
+    });
+    if (dataDeposit) {
+      newBalance = {
+        balance: balanceUser + amount,
+      };
+    } else {
+      newBalance = {
+        balance: balanceUser - amount,
+      };
+    }
+    let balanceUpdate = await initModel.account.update(newBalance, {
+      where: { idAccount: user.dataValues.account_idaccount },
+    });
+    let userUpdate = await initModel.user.findOne({
+      include: [
+        {
+          model: initModel.account,
+          as: "account_",
+        },
+      ],
+      where: { id: idUser },
+    });
+    if (userUpdate) {
+      return response(
+        "Despósito aceptado con exito",
+        200,
+        res,
+        "ok",
+        userUpdate
+      );
+    }
+  } else {
+    if(dataDeposit)
+    {
+      let newDeposit = {
+        state:state,
+        description:description
+      }
+      let depositUpdate = await initModel.deposit.update(newDeposit,{where:{idDeposit:idOperation}})
+      let deposit = await initModel.deposit.findOne({where:{idDeposit:idOperation}})
+      if(deposit)
+      {
+        return response(
+          "Despósito rechazado con exito",
+          200,
+          res,
+          "ok",
+          deposit
+        );
+      }
+    }
+    else{
+      let newExpense = {
+        state:state,
+        description:description
+      }
+      let expenseUpdate = await initModel.expenses.update(newExpense,{where:{idExpenses:idOperation}})
+      let expense = await initModel.expenses.findOne({where:{idExpenses:idOperation}})
+      if(expense)
+      {
+        return response(
+          "Retiro rechazado con exito",
+          200,
+          res,
+          "ok",
+          expense
+        );
+      }
+    
+    }
+  }
 }
 
 export {
@@ -212,4 +331,5 @@ export {
   findAllDeposits,
   findDepositByIdUser,
   findDepositById,
+  updateDepositAndExpenses,
 };

@@ -38,6 +38,7 @@ router.post('/api/user/logout', controllerUser.userLogout);
 
 //            =====>RUTAS MODULO DEPOSITOS
 router.post('/api/deposit', controllerDeposit.createDeposit);
+router.put('/api/deposit/expense', controllerDeposit.updateDepositAndExpenses);
 router.get('/api/deposit/:userId', controllerDeposit.findDepositByIdUser);
 router.get('/api/deposits', controllerDeposit.findAllDeposits);
 router.get('/api/deposit/id/:idDeposit', controllerDeposit.findDepositById);

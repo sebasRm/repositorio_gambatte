@@ -15,7 +15,7 @@ CREATE SCHEMA IF NOT EXISTS `gambatte_db` DEFAULT CHARACTER SET utf8 ;
 USE `gambatte_db` ;
 
 -- -----------------------------------------------------
--- Table `gambatte_db`.`rol`
+-- Table `gambatte_db`.`rol`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `gambatte_db`.`rol` (
   `idRol` INT NOT NULL AUTO_INCREMENT,
@@ -101,6 +101,7 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`deposit` (
   `state` INT NULL,
   `account_idaccount` INT NOT NULL,
   `idCard` INT NULL,
+  `description` VARCHAR(100) NULL,
   PRIMARY KEY (`idDeposit`),
   INDEX `fk_deposit_account1_idx` (`account_idaccount` ) ,
   CONSTRAINT `fk_deposit_account1`
@@ -133,6 +134,7 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`expenses` (
   `swiftCode` VARCHAR(45) NULL,
   `account_idaccount` INT NOT NULL,
   `bank` INT NOT NULL,
+  `description` VARCHAR(100) NULL,
   PRIMARY KEY (`idExpenses`),
   INDEX `fk_expenses_account1_idx` (`account_idaccount` ) ,
   INDEX `fk_expenses_bank1_idx` (`bank` ) ,
@@ -173,14 +175,14 @@ ENGINE = InnoDB;
 -- Table `gambatte_db`.`transaction`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `gambatte_db`.`transaction` (
-  `idTransaction` INT NOT NULL,
+  `idTransaction` INT NOT NULL AUTO_INCREMENT,
   `date` DATE NULL,
   `transactionType` VARCHAR(45) NULL,
   `transactionNumber` VARCHAR(50) NULL,
   `amount` DOUBLE NULL,
   `status` INT NULL,
   `user_login_id` INT NOT NULL,
-  `buy_services_idbuy_services` INT NOT NULL,
+  `buy_services_idbuy_services` INT NULL,
   PRIMARY KEY (`idTransaction`),
   INDEX `fk_transaction_user_login1_idx` (`user_login_id` ) ,
   INDEX `fk_transaction_buy_services1_idx` (`buy_services_idbuy_services` ) ,
@@ -249,28 +251,6 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`country` (
   `PHONE_CODE` INT NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
-
-
-DELIMITER $$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `notifications_user` ()  BEGIN
-SELECT `user`.`id`,
-	   `user`.`idUser`,
-       `user`.`fullName`,
-       `user`.`email`,
-	   `account`.`balance`,
-	   count(`deposit`.`idDeposit`) AS `cant_deposits`,
-	   sum(`deposit`.`amount`)AS`total_amount_deposits`,
-	   `deposit`.`state`,
-       count(`expenses`.`idExpenses`) AS `cant_expenses`,
-	   sum(`expenses`.`amount`)AS`total_amount_expenses`,
-	   `expenses`.`state`
-FROM `gambatte_db`.`user`
-LEFT JOIN `gambatte_db`.`account` ON(`gambatte_db`.`user`.`account_idaccount`=`gambatte_db`.`account`.`idAccount`)
-LEFT JOIN `gambatte_db`.`deposit` ON(`gambatte_db`.`account`.`idAccount`=`gambatte_db`.`deposit`.`account_idaccount`)
-LEFT JOIN `gambatte_db`.`expenses` ON(`gambatte_db`.`account`.`idAccount`=`gambatte_db`. `expenses`.`account_idaccount`)
-group by `gambatte_db`.`user`.`email`,  `gambatte_db`.`user`.`idUser`, `gambatte_db`.`user`.`fullName`, `gambatte_db`.`account`.`balance` ;
-END$$
-DELIMITER ;
 
 
 SET SQL_MODE=@OLD_SQL_MODE;

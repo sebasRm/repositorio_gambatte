@@ -7,6 +7,14 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: false,
       primaryKey: true
     },
+    user_login_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'user',
+        key: 'id'
+      }
+    },
     cardNumber: {
       type: DataTypes.STRING(300),
       allowNull: true
@@ -26,15 +34,7 @@ module.exports = function(sequelize, DataTypes) {
     termAndConditions: {
       type: DataTypes.TINYINT,
       allowNull: true
-    },
-    user_login_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {
-        model: 'user',
-        key: 'id'
-      }
-    },
+    }
   }, {
     sequelize,
     tableName: 'card',

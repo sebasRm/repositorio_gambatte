@@ -2,6 +2,7 @@ const Sequelize = require('sequelize');
 module.exports = function(sequelize, DataTypes) {
   return sequelize.define('transaction', {
     idTransaction: {
+      autoIncrement: true,
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true
@@ -36,7 +37,7 @@ module.exports = function(sequelize, DataTypes) {
     },
     buy_services_idbuy_services: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
       references: {
         model: 'buy_services',
         key: 'idBuy_services'

@@ -42,6 +42,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'bank',
         key: 'idBank'
       }
+    },
+    description: {
+      type: DataTypes.STRING(100),
+      allowNull: true
     }
   }, {
     sequelize,
