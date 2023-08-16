@@ -18,7 +18,7 @@ function generateToken(user) {
 }
 
 function generateCardToken(card) {
-  var encrypted = CryptoJS.AES.encrypt(card, 'secret-88').toString();
+  var encrypted = CryptoJS.AES.encrypt(card, process.env.SECRET_KEY).toString();
   return encrypted
 }
 

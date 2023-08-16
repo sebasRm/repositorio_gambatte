@@ -4,7 +4,7 @@ const response = require("../helpers/utils").response;
 let initModel = initModels(sequelize);
 const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
-import { emitNotificationCreationDepositExpenses, getNotificationsUserDepositsExpenses, getNotificationsUserDepositsExpenses1 } from "../socket/socket";
+import { emitNotificationCreationDepositExpenses, getNotificationsUserDepositsExpenses, getPaymentsNotificationsUser } from "../socket/socket";
 import { generateCardToken } from "../helpers/utils";
 import { verifyTokenCard } from "../middleware/verfyOauth";
 import deposit from "../models/deposit";
@@ -12,7 +12,6 @@ import deposit from "../models/deposit";
 /**
  * Funcion para crear un deposito de un usuario
  */
-
 async function createDeposit(req, res) {
   let cards;
   let user;
@@ -20,10 +19,8 @@ async function createDeposit(req, res) {
   let cardCreate;
   let findCard;
   let idCard
-  // console.log('data ================ >', req.body.data);
-  let { user: userReq, cardInfo, deposit } = req.body.data
 
-  // console.log('userReq ================ >', userReq.id);
+  let { user: userReq, cardInfo, deposit } = req.body.data
 
   try {
     req = req.body.data;
@@ -40,15 +37,14 @@ async function createDeposit(req, res) {
     if (cards.length > 0) {
       for (let card in cards) {
         let tokenCard = cards[card]
-        // console.log(tokenCard.dataValues);
-        let token = await verifyTokenCard(tokenCard?.dataValues?.cardNumber)
+        let token = await verifyTokenCard(tokenCard.dataValues.cardNumber)
         if (cardInfo.cardNumber === token) {
           idCard = tokenCard.dataValues.idCard
         }
       }
     }
 
-    else {
+    if (idCard == undefined) {
       cardCreate = await initModel.card.create({
         user_login_id: userReq.id,
         cardNumber: cardToken,
@@ -64,13 +60,6 @@ async function createDeposit(req, res) {
          cardToken: cardToken
        }): cardCreate=await initModel.card.findOne({where:{cardToken: cardToken}})*/
 
-    if (cardCreate) {
-      findCard = cardCreate
-      console.log('Mostrando los datos de la creacion tarjeta :', cardCreate, findCard);
-      // findCard = await initModel.card.findOne({
-      //   where: { user_login_id: userReq.id },
-      // });
-    }
     //console.log("cardCreate", cardCreate)
 
     user = await initModel.user.findOne({
@@ -83,7 +72,7 @@ async function createDeposit(req, res) {
       ecommerce: deposit.ecommerce,
       state: deposit.state,
       account_idaccount: user.dataValues.account_idaccount,
-      idCard: idCard ? idCard : findCard.dataValues.idCard
+      idCard: idCard ? idCard : cardCreate.dataValues.idCard
     });
     let fullName = {
       fullName: req.user.fullName
@@ -99,8 +88,8 @@ async function createDeposit(req, res) {
 
     if (createDeposit) {
       let responses
-      await getNotificationsUserDepositsExpenses1()
       await emitNotificationCreationDepositExpenses(`${req.user.fullName} ha solicitado un depósito.`)
+      await getPaymentsNotificationsUser()
       responses = response("Depósito creado con exito", 201, res, "ok", { deposit: createDeposit, user: user.dataValues });
 
       return responses
@@ -213,6 +202,10 @@ async function findDepositById(req, res) {
   }
 }
 
+
+async function updateDeposit(req, res) {
+
+}
 
 export {
   createDeposit,
