@@ -275,6 +275,7 @@ async function updateDepositAndExpenses(req, res) {
       ],
       where: { id: idUser },
     });
+    await getPaymentsNotificationsUser()
     if (userUpdate) {
       return response(
         "Despósito aceptado con exito",
@@ -293,6 +294,7 @@ async function updateDepositAndExpenses(req, res) {
       }
       let depositUpdate = await initModel.deposit.update(newDeposit,{where:{idDeposit:idOperation}})
       let deposit = await initModel.deposit.findOne({where:{idDeposit:idOperation}})
+      await getPaymentsNotificationsUser()
       if(deposit)
       {
         return response(
@@ -311,6 +313,7 @@ async function updateDepositAndExpenses(req, res) {
       }
       let expenseUpdate = await initModel.expenses.update(newExpense,{where:{idExpenses:idOperation}})
       let expense = await initModel.expenses.findOne({where:{idExpenses:idOperation}})
+      await getPaymentsNotificationsUser()
       if(expense)
       {
         return response(
