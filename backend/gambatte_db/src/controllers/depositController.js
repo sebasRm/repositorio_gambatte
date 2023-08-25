@@ -4,8 +4,8 @@ const response = require("../helpers/utils").response;
 let initModel = initModels(sequelize);
 const bcrypt = require("bcrypt");
 const { Op } = require("sequelize");
-import { emitNotificationCreationDepositExpenses, getNotificationsUserDepositsExpenses, getPaymentsNotificationsUser } from "../socket/socket";
-import { generateCardToken } from "../helpers/utils";
+import { emitNotification, emitNotificationCreationDepositExpenses, getAllDepositsAndExpenses1, getPaymentsNotificationsUser } from "../socket/socket";
+import { formatPrice, generateCardToken } from "../helpers/utils";
 import { verifyTokenCard } from "../middleware/verfyOauth";
 import deposit from "../models/deposit";
 
@@ -88,8 +88,9 @@ async function createDeposit(req, res) {
 
     if (createDeposit) {
       let responses
-      await emitNotificationCreationDepositExpenses(`${req.user.fullName} ha solicitado un depósito.`)
+      await emitNotificationCreationDepositExpenses(`${req.user.fullName} ha solicitado un depósito.`, 'Admin', 'Depósito')
       await getPaymentsNotificationsUser()
+      await getAllDepositsAndExpenses1()
       responses = response("Depósito creado con exito", 201, res, "ok", { deposit: createDeposit, user: user.dataValues });
 
       return responses
@@ -209,6 +210,7 @@ async function updateDepositAndExpenses(req, res) {
   let dataDeposit = false;
   let newBalance;
   req.body.data.paymentDeposit ? (dataDeposit = true) : (dataDeposit = false);
+
   dataDeposit
     ? (data = req.body.data.paymentDeposit)
     : (data = req.body.data.paymentExpense);
@@ -236,8 +238,7 @@ async function updateDepositAndExpenses(req, res) {
     });
 
     let balanceUser = user.dataValues.account_.dataValues.balance;
-
-    if (dataDeposit == false) {
+    if (typeOperation == 'expense') {
       if (amount > balanceUser) {
         return response(
           "No cuenta con el suficiente saldo para realizar el retiro",
@@ -259,14 +260,14 @@ async function updateDepositAndExpenses(req, res) {
     });
 
     if (dataDeposit) {
-      let despositUpdate = await initModel.deposit.update({state:state}, {
+      let despositUpdate = await initModel.deposit.update({ state: state }, {
         where: { idDeposit: idOperation },
       });
       newBalance = {
         balance: balanceUser + amount,
       };
     } else {
-      let expenseUpdate = await initModel.expenses.update({state:state}, {
+      let expenseUpdate = await initModel.expenses.update({ state: state }, {
         where: { idExpenses: idOperation },
       });
       newBalance = {
@@ -283,12 +284,30 @@ async function updateDepositAndExpenses(req, res) {
         {
           model: initModel.account,
           as: "account_",
+          include: [
+            {
+              model: initModel.deposit,
+              as: "deposits",
+            },
+            {
+              model: initModel.expenses,
+              as: "expenses",
+            },
+          ],
+        },
+        {
+          model: initModel.card,
+          as: "cards",
         },
       ],
       where: { id: idUser },
     });
-    getNotificationsUserDepositsExpense()
     if (userUpdate) {
+      await getPaymentsNotificationsUser()
+      await getAllDepositsAndExpenses1()
+      deposit == true ?
+        await emitNotification(`Se ha aprobado un depósito con valor de ${formatPrice(amount)} USD`, 'User', 'Depósito')
+        : await emitNotification(`Se ha aprobado un retiro con valor de ${formatPrice(amount)} USD`, 'User', 'Retiro')
       return response(
         "Despósito aceptado con exito",
         200,
@@ -298,17 +317,15 @@ async function updateDepositAndExpenses(req, res) {
       );
     }
   } else {
-    if(dataDeposit)
-    {
+    if (dataDeposit) {
       let newDeposit = {
-        state:state,
-        description:description
+        state: state,
+        description: description
       }
-      let depositUpdate = await initModel.deposit.update(newDeposit,{where:{idDeposit:idOperation}})
-      let deposit = await initModel.deposit.findOne({where:{idDeposit:idOperation}})
-      
-      if(deposit)
-      {
+      let depositUpdate = await initModel.deposit.update(newDeposit, { where: { idDeposit: idOperation } })
+      let deposit = await initModel.deposit.findOne({ where: { idDeposit: idOperation } })
+
+      if (deposit) {
         return response(
           "Despósito rechazado con exito",
           200,
@@ -317,19 +334,16 @@ async function updateDepositAndExpenses(req, res) {
           deposit
         );
       }
-    
+
     }
-    else{
+    else {
       let newExpense = {
-        state:state,
-        description:description
+        state: state,
+        description: description
       }
-      let expenseUpdate = await initModel.expenses.update(newExpense,{where:{idExpenses:idOperation}})
-      let expense = await initModel.expenses.findOne({where:{idExpenses:idOperation}})
-      
-     
-      if(expense)
-      {
+      let expenseUpdate = await initModel.expenses.update(newExpense, { where: { idExpenses: idOperation } })
+      let expense = await initModel.expenses.findOne({ where: { idExpenses: idOperation } })
+      if (expense) {
         return response(
           "Retiro rechazado con exito",
           200,
@@ -338,7 +352,7 @@ async function updateDepositAndExpenses(req, res) {
           expense
         );
       }
-    
+
     }
   }
 }

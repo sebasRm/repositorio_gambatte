@@ -51,7 +51,7 @@ module.exports.verifyTokenSision = (req, res) => {
         .status(401)
         .send({ Authorization: false, message: "El token es invalido" });
     }
-    console.log('llego', user);
+    // console.log('llego', user);
     req.user = user;
     let {
       id,
@@ -83,11 +83,11 @@ module.exports.verifyTokenSision = (req, res) => {
 
 
 
-module.exports.verifyTokenCard =async (cards) => {
+module.exports.verifyTokenCard = async (cards) => {
   try {
-   const bytes  = CryptoJS.AES.decrypt(cards, process.env.SECRET_KEY);
-   const originalCard = bytes.toString(CryptoJS.enc.Utf8);
-   return originalCard
+    const bytes = CryptoJS.AES.decrypt(cards, process.env.SECRET_KEY);
+    const originalCard = bytes.toString(CryptoJS.enc.Utf8);
+    return originalCard
   } catch (e) {
     throw e;
   }

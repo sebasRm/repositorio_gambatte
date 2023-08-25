@@ -9,7 +9,7 @@ const accountController =
 import { Server as WebSocketServer } from "socket.io";
 import http from "http";
 import { notificationsUsers } from "./controllers/notificationController";
-import { test, getNotificationsUserDepositsExpenses, connected } from './socket/socket'
+import { test, getNotificationsUserDepositsExpenses, connected, getAllDepositsAndExpenses, getAllDepositsAndExpenses1, initSocket, InitgetAllUsers } from './socket/socket'
 dotenv.config();
 let port = process.env.PORT;
 
@@ -17,6 +17,7 @@ const app = express();
 const server = http.createServer(app);
 
 const io = new WebSocketServer(server, { path: "/socket/gambatte", cors: { origin: "*" } });
+
 
 app.use(express.static(__dirname + '/public'))
 
@@ -86,8 +87,11 @@ const main = async () => {
   server.listen(port, () => {
     console.log("Server listening port: ", port);
   });
-  await getNotificationsUserDepositsExpenses()
-  await test()
+  // await getNotificationsUserDepositsExpenses()
+  await getAllDepositsAndExpenses()
+  // await getAllDepositsAndExpenses1()
+  await InitgetAllUsers()
+  await initSocket()
 
   return sequelize;
 };

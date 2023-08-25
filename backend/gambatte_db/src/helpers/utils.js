@@ -12,7 +12,7 @@ function generateToken(user) {
   let payload = {
     sub: user,
     iat: moment().unix(),
-    exp: moment().add(30, "minute").unix(),
+    exp: moment().add(10, "minute").unix(),
   };
   return jwt.sign(payload, process.env.SECRET_KEY);
 }
@@ -38,6 +38,23 @@ const response = (msg, code, res, status, data) => {
   return res.status(code).send({ status: status, data, msg });
 };
 
+const formatPrice = (val) => {
+  try {
+    if (val > 0) {
+      let value = parseFloat(val).toFixed(0);
+      value = value.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      return `$${value}`;
+    } else if (val === 0) {
+      return "$" + val;
+    } else if (val === "") {
+      return val;
+    }
+    return null;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 class staticVar {
   static USER_REGISTER_SUCCESSFUL = "Usuario registrado exitosamente";
   static USER_REGISTER_EXIST = "El usuario ya se encuentra registrado";
@@ -60,4 +77,4 @@ class staticVar {
   static USER_UPDATE_AVATAR_ERROR_METHOD =
     "error method ==> updateAvatarUserLogin";
 }
-module.exports = { staticVar, response, generateRandomIdUser, generateToken, initModel, generateCardToken };
+module.exports = { staticVar, response, generateRandomIdUser, generateToken, initModel, generateCardToken, formatPrice };

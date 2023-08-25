@@ -4,7 +4,7 @@ const response = require("../helpers/utils").response;
 let initModel = initModels(sequelize);
 const bcrypt = require("bcrypt");
 const { Op, Model } = require("sequelize");
-const { getNotificationsUserDepositsExpenses, getPaymentsNotificationsUser, emitNotificationCreationDepositExpenses } = require("../socket/socket");
+const { getNotificationsUserDepositsExpenses, getPaymentsNotificationsUser, emitNotificationCreationDepositExpenses, getCantDepositsExpenses } = require("../socket/socket");
 
 async function findAllExpenses(req, res) {
   try {
@@ -90,7 +90,6 @@ async function findExpensesById(req, res) {
 }
 
 async function createExpenses(req, res) {
-  console.log('Llego la peticon a expenses controller ', req.body.data.expenses);
   try {
     const { id, idUser, fullName, email } = req.body.data.user;
     const { bank, keyAccount, amount, swiftCode } = req.body.data.expenses;
@@ -109,8 +108,9 @@ async function createExpenses(req, res) {
           account_idaccount: user.dataValues.account_idaccount,
         });
         if (expense) {
-          await emitNotificationCreationDepositExpenses(`${fullName} ha solicitado un depósito.`)
+          await emitNotificationCreationDepositExpenses(`${fullName} ha solicitado un retiro.`, 'Admin', 'Retiro')
           await getPaymentsNotificationsUser()
+          // await getCantDepositsExpenses()
           return response("Retiros del usuario", 201, res, "ok", expense);
         }
         response("Error al crear los los retiro", 400, res, "false", []);

@@ -12,8 +12,9 @@ let initModel = initModels(sequelize);
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const fs = require("fs");
-const { findUserByIdService } = require("../services/userService");
+const { findUserByIdService, updateStatusActiveService } = require("../services/userService");
 const { deleteFile } = require("../services/uploadServices");
+const { findAllUsers, emitNotification } = require("../socket/socket");
 
 dotenv.config();
 let port = process.env.PORT;
@@ -151,25 +152,20 @@ async function userLogin(req, res) {
           user: user,
           accessToken: generateToken(user),
         };
-        let responses = response(
-          "Usuario logeado...",
-          200,
-          res,
-          "ok",
-          dataUser
-        );
-        return responses;
+        let statusActive = await updateStatusActiveService(user.dataValues.id, true)
+        if (statusActive) {
+          if (user.dataValues.role == 'User') {
+            await emitNotification(`${user.dataValues.fullName} ha iniciado sesión`, 'Admin', 'Inicio de sesión')
+          }
+          await findAllUsers()
+          return response(
+            "Usuario logeado.", 200, res, "ok", dataUser);
+        }
+        return response(STATICVAR.user_ERROR, 400, res, false, []);
       }
-      let responses = response(STATICVAR.user_ERROR, 400, res, false, []);
-      return responses;
-    } else {
-      let responses = response(
-        "El usuario no se encuentra registrado",
-        400,
-        res,
-        false,
-        []
-      );
+    }
+    else {
+      let responses = response("El usuario no se encuentra registrado", 400, res, false, []);
       return responses;
     }
   } catch (error) {
@@ -191,11 +187,17 @@ async function userLogout(req, res) {
       where: { id: req.id },
     });
     if (userOut) {
-      let responses = response(STATICVAR.USER_LOGOUT, 200, res, "ok", []);
-      return responses;
+      let user = await findUserByIdService(req.id)
+      if (user) {
+        if (user.dataValues.role == 'User') {
+          console.log('llego aqui ', status);
+          await emitNotification(`${user.dataValues.fullName} ha cerrado sesión`, 'Admin', 'Cierre de sesión')
+        }
+        await findAllUsers()
+        return response(STATICVAR.USER_LOGOUT, 200, res, "ok", []);
+      }
     }
-    let responses = response(STATICVAR.user_ERROR, 400, res, false, []);
-    return responses;
+    return response(STATICVAR.user_ERROR, 400, res, false, []);
   } catch (error) {
     throw (STATICVAR.USER_LOGOUT_ERROR_METHOD, error);
   }
@@ -479,20 +481,17 @@ async function findUsers(req, res) {
       ],
     });
     if (users) {
-
       users.map((user) => {
         delete user.dataValues.password;
         user.dataValues.role = user.dataValues.rol_.dataValues.role;
         delete user.dataValues.rol_idrol
         delete user.dataValues.rol_
-        if (role == 'User') {
-          delete user.dataValues.documentNumber
-          delete user.dataValues.documentType
-          delete user.dataValues.statusActive
-          delete user.dataValues.account_idaccount
-          delete user.dataValues.postalCode
-          delete user.dataValues.role
-        }
+        delete user.dataValues.documentNumber
+        delete user.dataValues.documentType
+        // delete user.dataValues.statusActive
+        delete user.dataValues.account_idaccount
+        delete user.dataValues.postalCode
+        // delete user.dataValues.role
       })
       let responses = response("Users", 200, res, "ok", users);
       return responses;
