@@ -38,6 +38,10 @@ module.exports = function(sequelize, DataTypes) {
     description: {
       type: DataTypes.STRING(100),
       allowNull: true
+    },
+    hour: {
+      type: DataTypes.STRING(25),
+      allowNull: true
     }
   }, {
     sequelize,

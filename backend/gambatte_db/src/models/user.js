@@ -98,6 +98,10 @@ module.exports = function (sequelize, DataTypes) {
     postalCode: {
       type: DataTypes.STRING(45),
       allowNull: true
+    },
+    hour: {
+      type: DataTypes.STRING(25),
+      allowNull: true
     }
   }, {
     sequelize,
