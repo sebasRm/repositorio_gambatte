@@ -15,7 +15,7 @@ CREATE SCHEMA IF NOT EXISTS `gambatte_db` DEFAULT CHARACTER SET utf8 ;
 USE `gambatte_db` ;
 
 -- -----------------------------------------------------
--- Table `gambatte_db`.`rol`
+-- Table `gambatte_db`.`rol`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `gambatte_db`.`rol` (
   `idRol` INT NOT NULL AUTO_INCREMENT,
@@ -68,6 +68,7 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`user` (
   `documentImagenPost` VARCHAR(45) NULL,
   `indicative` VARCHAR(45) NULL,
   `postalCode` VARCHAR(45) NULL,
+  `hour` VARCHAR(25) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_user_login_rol_idx` (`rol_idrol` ) ,
   INDEX `fk_user_login_account1_idx` (`account_idaccount` ) ,
@@ -102,6 +103,7 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`deposit` (
   `account_idaccount` INT NOT NULL,
   `idCard` INT NULL,
   `description` VARCHAR(100) NULL,
+  `hour` VARCHAR(25) NULL,
   PRIMARY KEY (`idDeposit`),
   INDEX `fk_deposit_account1_idx` (`account_idaccount` ) ,
   CONSTRAINT `fk_deposit_account1`
@@ -135,6 +137,7 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`expenses` (
   `account_idaccount` INT NOT NULL,
   `bank` INT NOT NULL,
   `description` VARCHAR(100) NULL,
+  `hour` VARCHAR(25) NULL,
   PRIMARY KEY (`idExpenses`),
   INDEX `fk_expenses_account1_idx` (`account_idaccount` ) ,
   INDEX `fk_expenses_bank1_idx` (`bank` ) ,
@@ -161,6 +164,7 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`buy_services` (
   `date` DATE NULL,
   `status` INT NULL,
   `user_login_id` INT NOT NULL,
+  `hour` VARCHAR(25) NULL,
   PRIMARY KEY (`idBuy_services`),
   INDEX `fk_buy_services_user_login1_idx` (`user_login_id` ) ,
   CONSTRAINT `fk_buy_services_user_login1`
@@ -183,6 +187,7 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`transaction` (
   `status` INT NULL,
   `user_login_id` INT NOT NULL,
   `buy_services_idbuy_services` INT NULL,
+  `hour` VARCHAR(25) NULL,
   PRIMARY KEY (`idTransaction`),
   INDEX `fk_transaction_user_login1_idx` (`user_login_id` ) ,
   INDEX `fk_transaction_buy_services1_idx` (`buy_services_idbuy_services` ) ,
@@ -208,6 +213,7 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`payment` (
   `date` DATE NULL,
   `status` INT NULL,
   `buy_services_idbuy_services` INT NOT NULL,
+  `hour` VARCHAR(25) NULL,
   PRIMARY KEY (`idPayment`),
   INDEX `fk_payment_buy_services1_idx` (`buy_services_idbuy_services` ) ,
   CONSTRAINT `fk_payment_buy_services1`

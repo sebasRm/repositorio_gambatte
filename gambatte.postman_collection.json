@@ -75,7 +75,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"data\": \r\n    {\r\n      \"user\": {\r\n        \"fullName\": \"Sebastian Ricardo\",\r\n        \"email\": \"sebas123144@bancolombia.com.co\",\r\n        \"phone\": \"3053028411\",\r\n        \"password\": \"123456\",\r\n        \"termAndConditions\": true,\r\n        \"indicative\":57,\r\n        \"role\":1\r\n      }\r\n    }\r\n  \r\n}\r\n",
+							"raw": "{\r\n  \"data\": \r\n    {\r\n      \"user\": {\r\n        \"fullName\": \"Sebastian Ricardo\",\r\n        \"email\": \"sebas@bancolombia.com.co\",\r\n        \"phone\": \"3053028411\",\r\n        \"password\": \"123456\",\r\n        \"termAndConditions\": true,\r\n        \"indicative\":57,\r\n        \"role\":1\r\n      }\r\n    }\r\n  \r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -430,7 +430,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"data\":\r\n        {\r\n            \"cardInfo\":{\r\n                \"cardNumber\":\"4894 4542 2316\",\r\n                \"ccv\":\"343\",\r\n                \"expYear\":\"28\",\r\n                \"month\":\"05\",\r\n                \"termAndConditions\":true\r\n            },\r\n            \"deposit\":{\r\n                \"amount\":600,\r\n                \"depositDate\":\"2023-06-06\",\r\n                \"ecommerce\":\"\",\r\n                \"state\":0\r\n            },\r\n            \"user\":{\r\n                \"email\":\"yirleison@bancolombia.com.co\",\r\n                \"fullName\":\"Yirleison Palomeque Moreno\",\r\n                \"id\":1\r\n            }\r\n        }\r\n}",
+							"raw": "{\r\n    \"data\":\r\n        {\r\n            \"cardInfo\":{\r\n                \"cardNumber\":\"4894 4542 5588\",\r\n                \"ccv\":\"343\",\r\n                \"expYear\":\"28\",\r\n                \"month\":\"05\",\r\n                \"termAndConditions\":true\r\n            },\r\n            \"deposit\":{\r\n                \"amount\":600,\r\n                \"depositDate\":\"2023-06-06\",\r\n                \"ecommerce\":\"\",\r\n                \"state\":0,\r\n                \"hour\":\"10:35:02 AM\"\r\n            },\r\n            \"user\":{\r\n                \"email\":\"yirleison@bancolombia.com.co\",\r\n                \"fullName\":\"Yirleison Palomeque Moreno\",\r\n                \"id\":2\r\n            }\r\n        }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -514,7 +514,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"data\":\r\n        { \r\n            \"expenses\":{\r\n                \"bank\":1,\r\n                \"keyAccount\":\"20236555\",\r\n                \"amount\":1300000,\r\n                \"swiftCode\":\"1254\"\r\n            },\r\n            \"user\":{\r\n                \"email\":\"yirleison@bancolombia.com.co\",\r\n                \"fullName\":\"Samuel Moreno\",\r\n                \"id\":1\r\n            }\r\n        }\r\n}",
+							"raw": "{\r\n    \"data\":\r\n        { \r\n            \"expenses\":{\r\n                \"bank\":1,\r\n                \"keyAccount\":\"20236555\",\r\n                \"amount\":1300000,\r\n                \"swiftCode\":\"1254\",\r\n                \"hour\":\"11:36:05 PM\"\r\n            },\r\n            \"user\":{\r\n                \"email\":\"yirleison@bancolombia.com.co\",\r\n                \"fullName\":\"Samuel Moreno\",\r\n                \"id\":3\r\n            }\r\n        }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -741,7 +741,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"data\":{\r\n        \"paymentDeposit\":{\r\n            \"idUser\":3,\r\n            \"typeOperation\":\"Expense\",\r\n            \"idOperation\":1,\r\n            \"paymentDate\":\"2023-06-06\",\r\n            \"amount\":1200,\r\n            \"state\":2,\r\n            \"description\":\"no tiene saldo\"\r\n        }\r\n    }\r\n}",
+							"raw": "{\r\n    \"data\":{\r\n        \"paymentDeposit\":{\r\n            \"idUser\":2,\r\n            \"typeOperation\":\"expense\",\r\n            \"idOperation\":1,\r\n            \"paymentDate\":\"2023-06-06\",\r\n            \"amount\":1200,\r\n            \"state\":2,\r\n            \"description\":\"\",\r\n            \"hour\":\"9:59:59 PM\"\r\n        }\r\n    }\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -749,7 +749,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:4000/api/deposit",
+							"raw": "http://localhost:4000/api/deposit/expense",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -757,7 +757,8 @@
 							"port": "4000",
 							"path": [
 								"api",
-								"deposit"
+								"deposit",
+								"expense"
 							]
 						}
 					},

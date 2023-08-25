@@ -42,6 +42,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'buy_services',
         key: 'idBuy_services'
       }
+    },
+    hour: {
+      type: DataTypes.STRING(25),
+      allowNull: true
     }
   }, {
     sequelize,

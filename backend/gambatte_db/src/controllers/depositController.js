@@ -54,13 +54,6 @@ async function createDeposit(req, res) {
         termAndConditions: cardUser.termAndConditions
       })
     }
-    /* cardExits === false ?
-       cardCreate=await initModel.card.create({
-         user_login_id: req.user.id,
-         cardToken: cardToken
-       }): cardCreate=await initModel.card.findOne({where:{cardToken: cardToken}})*/
-
-    //console.log("cardCreate", cardCreate)
 
     user = await initModel.user.findOne({
       where: { id: userReq.id },
@@ -72,7 +65,8 @@ async function createDeposit(req, res) {
       ecommerce: deposit.ecommerce,
       state: deposit.state,
       account_idaccount: user.dataValues.account_idaccount,
-      idCard: idCard ? idCard : cardCreate.dataValues.idCard
+      idCard: idCard ? idCard : cardCreate.dataValues.idCard,
+      hour: deposit.hour
     });
     let fullName = {
       fullName: req.user.fullName
@@ -221,6 +215,7 @@ async function updateDepositAndExpenses(req, res) {
     amount,
     state,
     description,
+    hour
   } = data;
   let user;
 
@@ -256,6 +251,7 @@ async function updateDepositAndExpenses(req, res) {
       amount: amount,
       status: state,
       user_login_id: user.dataValues.id,
+      hour : hour
     });
 
     if (dataDeposit) {
@@ -287,7 +283,7 @@ async function updateDepositAndExpenses(req, res) {
       ],
       where: { id: idUser },
     });
-    getNotificationsUserDepositsExpense()
+    getNotificationsUserDepositsExpenses()
     if (userUpdate) {
       return response(
         "Despósito aceptado con exito",

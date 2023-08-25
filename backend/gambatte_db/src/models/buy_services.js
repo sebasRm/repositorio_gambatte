@@ -30,6 +30,10 @@ module.exports = function(sequelize, DataTypes) {
         model: 'user',
         key: 'id'
       }
+    },
+    hour: {
+      type: DataTypes.STRING(25),
+      allowNull: true
     }
   }, {
     sequelize,

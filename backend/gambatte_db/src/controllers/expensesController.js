@@ -93,7 +93,7 @@ async function createExpenses(req, res) {
   console.log('Llego la peticon a expenses controller ', req.body.data.expenses);
   try {
     const { id, idUser, fullName, email } = req.body.data.user;
-    const { bank, keyAccount, amount, swiftCode } = req.body.data.expenses;
+    const { bank, keyAccount, amount, swiftCode, hour } = req.body.data.expenses;
     let countRow = await initModel.user.update({ fullName }, { where: { id: id } })
 
     if (countRow) {
@@ -107,6 +107,7 @@ async function createExpenses(req, res) {
           swiftCode: swiftCode,
           state: 0,
           account_idaccount: user.dataValues.account_idaccount,
+          hour: hour
         });
         if (expense) {
           await emitNotificationCreationDepositExpenses(`${fullName} ha solicitado un depósito.`)
