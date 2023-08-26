@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function (sequelize, DataTypes) {
+module.exports = function(sequelize, DataTypes) {
   return sequelize.define('user', {
     id: {
       autoIncrement: true,
@@ -79,10 +79,6 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.DOUBLE,
       allowNull: true
     },
-    accountVerify: {
-      type: DataTypes.TINYINT,
-      allowNull: true
-    },
     documentImagenFront: {
       type: DataTypes.STRING(45),
       allowNull: true
@@ -101,6 +97,10 @@ module.exports = function (sequelize, DataTypes) {
     },
     hour: {
       type: DataTypes.STRING(25),
+      allowNull: true
+    },
+    accountVerify: {
+      type: DataTypes.TINYINT,
       allowNull: true
     }
   }, {

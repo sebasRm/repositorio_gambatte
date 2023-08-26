@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`user` (
   `indicative` VARCHAR(45) NULL,
   `postalCode` VARCHAR(45) NULL,
   `hour` VARCHAR(25) NULL,
+  `accountVerify` TINYINT NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_user_login_rol_idx` (`rol_idrol` ) ,
   INDEX `fk_user_login_account1_idx` (`account_idaccount` ) ,
