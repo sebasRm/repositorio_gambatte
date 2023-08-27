@@ -23,6 +23,7 @@ router.get('/api/user/id/:userId', controllerUser.findUser);
 router.get('/api/user/photo/:imageFile', getImageFile)
 router.use(fileUpload())
 router.put('/api/user/upload-file/:idUser', uploapFile);
+router.put('/api/user/update-file-documents/:idUser', controllerUser.updateFileDocuments);
 router.put('/api/user/updatePassword', controllerUser.updatePasswordUserLogin);
 router.put('/api/user/photo-update/:idUser', controllerUser.updateFile)
 

@@ -322,6 +322,48 @@ async function updateFile(req, res) {
   }
 }
 
+async function updateFileDocuments(req, res) {
+  let user = null
+  let { idUser } = req.params
+  let { documents } = req.body
+  try {
+    user = await findUserByIdService(idUser)
+    if (user && user.dataValues.documentImagenFront && user.dataValues.documentImagenPost) {
+      if (deleteFile([user.dataValues.documentImagenFront, user.dataValues.documentImagenPost])) {
+        user = await initModel.user
+          .update(
+            {
+              documentImagenFront: documents.documentImagenFront,
+              documentImagenPost: documents.documentImagenPost
+            },
+            {
+              where: { id: idUser },
+            });
+        if (user[0] == "1") {
+          user = await findUserByIdService(idUser)
+          return response(STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL, 200, res, "ok", user);
+        }
+      }
+      else {
+        return false
+      }
+    } else {
+      user = await initModel.user.update({
+        documentImagenFront: documents.documentImagenFront,
+        documentImagenPost: documents.documentImagenPost
+      }, {
+        where: { id: idUser },
+      });
+      if (user[0] == "1") {
+        user = await findUserByIdService(idUser)
+        return response(STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL, 200, res, "ok", user);
+      }
+    }
+  } catch (error) {
+    throw (STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
+  }
+}
+
 /**
  * Función para actualizar datos generales de un usuario
  */
@@ -535,6 +577,7 @@ module.exports = {
   deleteUserLogin,
   updatePasswordUserLogin,
   updateFile,
+  updateFileDocuments,
   updateUserLogin,
   findUser,
   findUsers,

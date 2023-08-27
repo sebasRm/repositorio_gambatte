@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('user', {
     id: {
       autoIncrement: true,
@@ -80,11 +80,11 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     documentImagenFront: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(100),
       allowNull: true
     },
     documentImagenPost: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(100),
       allowNull: true
     },
     indicative: {

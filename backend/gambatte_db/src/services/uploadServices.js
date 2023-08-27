@@ -105,16 +105,33 @@ function getImageFile(req, res) {
 }
 
 const deleteFile = (file) => {
-  let pathFIle = `./src/storage/images/${file}`;
-  // console.log(pathFIle);
-  try {
-    fs.unlinkSync(pathFIle);
-    return true;
-  } catch (err) {
-    console.error("Something wrong happened removing the file", err);
-    return false;
+  if (file.length > 0) {
+    file.forEach((el, index) => {
+      let pathFIle = `./src/storage/images/${el[index]}`;
+      try {
+        fs.unlinkSync(pathFIle);
+        if (index == file.length) {
+          return true;
+        }
+      } catch (err) {
+        console.error("Something wrong happened removing the file", err);
+        return false;
+      }
+    })
+  } else {
+    let pathFIle = `./src/storage/images/${file}`;
+    try {
+      fs.unlinkSync(pathFIle);
+      return true;
+    } catch (err) {
+      console.error("Something wrong happened removing the file", err);
+      return false;
+    }
   }
-};
+}
+
+// console.log(pathFIle);
+
 
 module.exports = {
   uploapFile,
