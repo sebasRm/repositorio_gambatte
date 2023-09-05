@@ -3,6 +3,7 @@ import { sequelize } from "../db/connectionDB";
 import { querys } from "../helpers/querys";
 import { findDepositAndExpense } from "../services/depositsExpenses";
 import { findUsersServices } from "../services/userService";
+import { getDataGoogle } from "../services/googleServices";
 
 export async function initSocket() {
   io.on("connection", async (socket) => {

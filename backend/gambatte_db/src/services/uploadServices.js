@@ -106,18 +106,19 @@ function getImageFile(req, res) {
 
 const deleteFile = (file) => {
   if (file.length > 0) {
-    file.forEach((el, index) => {
-      let pathFIle = `./src/storage/images/${el[index]}`;
+    for (let i = 0; i < file.length; i++) {
+      console.log('Mostrando files', file, file[i]);
+      let pathFIle = `./src/storage/images/${file[i]}`;
       try {
         fs.unlinkSync(pathFIle);
-        if (index == file.length) {
+        if (i == file.length) {
           return true;
         }
       } catch (err) {
         console.error("Something wrong happened removing the file", err);
         return false;
       }
-    })
+    }
   } else {
     let pathFIle = `./src/storage/images/${file}`;
     try {

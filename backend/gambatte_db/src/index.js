@@ -9,7 +9,8 @@ const accountController =
 import { Server as WebSocketServer } from "socket.io";
 import http from "http";
 import { notificationsUsers } from "./controllers/notificationController";
-import { test, getNotificationsUserDepositsExpenses, connected, getAllDepositsAndExpenses, getAllDepositsAndExpenses1, initSocket, InitgetAllUsers } from './socket/socket'
+import { test, getNotificationsUserDepositsExpenses, connected, getAllDepositsAndExpenses, getAllDepositsAndExpenses1, initSocket, InitgetAllUsers, getDataGoolgeSocket } from './socket/socket'
+import { squeduleTask } from "./services/nodeCronService";
 dotenv.config();
 let port = process.env.PORT;
 
@@ -85,12 +86,14 @@ const main = async () => {
   let sequelize = await connection.sequelize;
   sequelize.authenticate();
   server.listen(port, () => {
+    squeduleTask()
     console.log("Server listening port: ", port);
   });
   // await getNotificationsUserDepositsExpenses()
   await getAllDepositsAndExpenses()
   // await getAllDepositsAndExpenses1()
   await InitgetAllUsers()
+
   await initSocket()
 
   return sequelize;

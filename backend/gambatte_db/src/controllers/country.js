@@ -44,7 +44,7 @@ async function getCountryById(req, res) {
 
         if (deposits) {
             let responses = response(
-                "Desósito del usuario",
+                "Paises",
                 200,
                 res,
                 "ok",
@@ -53,7 +53,7 @@ async function getCountryById(req, res) {
             return responses;
         } else {
             let responses = response(
-                "Error al buscar el depósito",
+                "Error al listar paises",
                 400,
                 res,
                 "false",
