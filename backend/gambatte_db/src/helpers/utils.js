@@ -12,7 +12,7 @@ function generateToken(user) {
   let payload = {
     sub: user,
     iat: moment().unix(),
-    exp: moment().add(10, "minute").unix(),
+    exp: moment().add(20, "minute").unix(),
   };
   return jwt.sign(payload, process.env.SECRET_KEY);
 }

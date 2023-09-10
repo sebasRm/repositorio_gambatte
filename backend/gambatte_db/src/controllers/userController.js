@@ -142,7 +142,7 @@ async function userLogin(req, res) {
         "password",
       ],
     });
-    if (user) {
+    if (Object.keys(user).length > 0) {
       const login = await bcrypt.compare(password, user.dataValues.password);
       delete user.dataValues.password;
       if (login) {

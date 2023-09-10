@@ -9,7 +9,7 @@ const controllerBank = require('../controllers/bankController');
 
 const { uploapFile, getImageFile } = require('../services/uploadServices');
 const { getCountries, getCountryById } = require("../controllers/country");
-const { getFinancialActive } = require("../controllers/financialDataController");
+const { getFinancialActive, getFinancialFilterActive } = require("../controllers/financialDataController");
 
 const router = express.Router();
 
@@ -65,5 +65,6 @@ router.delete('/api/bank/:idBank', controllerBank.deleteBank);
 
 //            =====> RUTAS MODULO GOOGLE FINANCIAL
 router.get('/api/get-google-fianancial', getFinancialActive);
+router.get('/api/get-google-fianancial-filter-active', getFinancialFilterActive);
 
 module.exports = { router };
