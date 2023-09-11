@@ -36,7 +36,13 @@ async function getFinancialActive(req, res) {
             );
         }
     } catch (error) {
-        throw error;
+        return response(
+            "Error al tratar de consultar las apis de Google Financial",
+            500,
+            res,
+            "false",
+            []
+        );
     }
 }
 
@@ -61,7 +67,13 @@ async function getFinancialFilterActive(req, res) {
             );
         }
     } catch (error) {
-        throw error;
+        return response(
+            "Error al tratar de consultar las apis de Google Financial",
+            500,
+            res,
+            "false",
+            []
+        );
     }
 }
 

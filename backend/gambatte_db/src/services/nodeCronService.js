@@ -13,8 +13,8 @@ const squeduleTask = async function () {
                 io.emit("finance-google-data", { data });
                 // io.emit("finance-google-data", { data });
             }
-        } catch (error) {
-            console.log('mostrando el error', error);
+        } catch (e) {
+            console.log('mostrando el error', e);
         }
     });
 }

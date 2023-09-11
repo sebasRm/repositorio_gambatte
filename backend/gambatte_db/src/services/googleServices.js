@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const SerpApi = require('google-search-results-nodejs');
-const search = new SerpApi.GoogleSearch("641cf5882802f085a54bd1af6eb5a2620333ca32c6765150296c5270846e63fb");
+const search = new SerpApi.GoogleSearch(process.env.APY_KEY_GOOGLE_1);
 
 
 const getDataGoogleService = (param) => {
@@ -17,9 +17,9 @@ const getDataGoogleService = (param) => {
                     return resolve(data)
                 }
             });
-        } catch (error) {
-            console.log('Error getDataGoogleService', error);
-            return reject(error)
+        } catch (e) {
+            console.log('Error getDataGoogleService', e);
+            return reject(e)
         }
 
     })
@@ -30,13 +30,14 @@ const getDataGoogleFilterActiveService = (url) => {
     const params = {
         api_key: process.env.APY_KEY_GOOGLE_1,
     };
+
     return new Promise(async (resolve, reject) => {
         try {
             let { data } = await axios.get(url, { params })
             return resolve(data)
-        } catch (error) {
-            console.log('Error getDataGoogleFilterActiveService', error);
-            return reject(error)
+        } catch (e) {
+            console.log('Error getDataGoogleFilterActiveService', e);
+            return reject(e)
         }
 
     })
