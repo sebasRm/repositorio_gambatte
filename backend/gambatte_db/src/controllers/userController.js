@@ -549,17 +549,26 @@ async function findUsers(req, res) {
 async function validateEmail(req, res) {
   try {
     const { email, id } = req.body;
-    const user = await initModel.user.findOne({ where: { id: id } });
-    if (user) {
-      if (email === user?.email) {
-        return response("Email el del usuario", 200, res, "ok", { email: 1 });
+    if (id !== null) {
+      const user = await initModel.user.findOne({ where: { id: id } });
+      if (user) {
+        if (email === user?.email) {
+          return response("Email el del usuario", 200, res, "ok", { email: 1 });
+        }
+        const emailExist = await initModel.user.findOne({ where: { email: email } });
+        if (!emailExist) {
+          return response("Email no es de nadie", 200, res, "ok", { email: 2 });
+        }
+        return response("Email esta siendo utilizado", 200, res, "ok", { email: 3 });
       }
+    } else {
       const emailExist = await initModel.user.findOne({ where: { email: email } });
       if (!emailExist) {
         return response("Email no es de nadie", 200, res, "ok", { email: 2 });
       }
       return response("Email esta siendo utilizado", 200, res, "ok", { email: 3 });
     }
+
   } catch (error) {
     throw (error);
   }
