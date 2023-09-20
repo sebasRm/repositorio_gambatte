@@ -30,12 +30,12 @@ function initModels(sequelize) {
   account.hasMany(deposit, { as: "deposits", foreignKey: "account_idaccount"});
   expenses.belongsTo(account, { as: "account_", foreignKey: "account_idaccount"});
   account.hasMany(expenses, { as: "expenses", foreignKey: "account_idaccount"});
+  payment.belongsTo(account, { as: "account_", foreignKey: "account_idAccount"});
+  account.hasMany(payment, { as: "payments", foreignKey: "account_idAccount"});
   user.belongsTo(account, { as: "account_", foreignKey: "account_idaccount"});
   account.hasMany(user, { as: "users", foreignKey: "account_idaccount"});
   expenses.belongsTo(bank, { as: "bank_", foreignKey: "bank"});
   bank.hasMany(expenses, { as: "expenses", foreignKey: "bank"});
-  payment.belongsTo(buy_services, { as: "buy_", foreignKey: "buy_services_idbuy_services"});
-  buy_services.hasMany(payment, { as: "payments", foreignKey: "buy_services_idbuy_services"});
   transaction.belongsTo(buy_services, { as: "buy_", foreignKey: "buy_services_idbuy_services"});
   buy_services.hasMany(transaction, { as: "transactions", foreignKey: "buy_services_idbuy_services"});
   user.belongsTo(document_type, { as: "documentType_", foreignKey: "documentType"});

@@ -70,6 +70,7 @@ CREATE TABLE IF NOT EXISTS `gambatte_db`.`user` (
   `postalCode` VARCHAR(45) NULL,
   `hour` VARCHAR(25) NULL,
   `accountVerify` TINYINT NULL,
+  `description` VARCHAR(100) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_user_login_rol_idx` (`rol_idrol` ) ,
   INDEX `fk_user_login_account1_idx` (`account_idaccount` ) ,
@@ -209,17 +210,25 @@ ENGINE = InnoDB;
 -- Table `gambatte_db`.`payment`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `gambatte_db`.`payment` (
-  `idPayment` INT NOT NULL,
+  `idPayment` INT NOT NULL AUTO_INCREMENT,
+  `investmentValue` DOUBLE NULL,
   `amount` DOUBLE NULL,
   `date` DATE NULL,
-  `status` INT NULL,
-  `buy_services_idbuy_services` INT NOT NULL,
   `hour` VARCHAR(25) NULL,
+  `result` DOUBLE NULL,
+  `status` INT NULL,
+  `total` DOUBLE NULL,
+  `account_idAccount` INT NOT NULL,
+  `title` VARCHAR(45) NULL,
+  `price` VARCHAR(100) NULL,
+  `percentage` DOUBLE NULL,
+  `value` DOUBLE NULL,
+  `movement` VARCHAR(45) NULL,
   PRIMARY KEY (`idPayment`),
-  INDEX `fk_payment_buy_services1_idx` (`buy_services_idbuy_services` ) ,
-  CONSTRAINT `fk_payment_buy_services1`
-    FOREIGN KEY (`buy_services_idbuy_services`)
-    REFERENCES `gambatte_db`.`buy_services` (`idBuy_services`)
+  INDEX `fk_payment_account1_idx` (`account_idAccount` ) ,
+  CONSTRAINT `fk_payment_account1`
+    FOREIGN KEY (`account_idAccount`)
+    REFERENCES `gambatte_db`.`account` (`idAccount`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

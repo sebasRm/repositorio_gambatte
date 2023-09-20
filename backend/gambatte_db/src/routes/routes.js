@@ -5,6 +5,7 @@ const controllerAccount = require('../controllers/accountController');
 const controllerDeposit = require('../controllers/depositController');
 const controllerExpenses = require('../controllers/expensesController');
 const controllerBank = require('../controllers/bankController');
+const controllerPayment = require('../controllers/paymentAdapter')
 // const upload = require("../libs/storange").default;
 
 const { uploapFile, getImageFile } = require('../services/uploadServices');
@@ -16,6 +17,7 @@ const router = express.Router();
 //            =====> RUTAS MODULO USUARIO
 router.post('/api/user', controllerUser.createUser);
 router.post('/api/validate/email', controllerUser.validateEmail);
+router.post('/api/update/acount/verify', controllerUser.updateAcountVerify);
 router.get('/api/account/:userId', controllerAccount.searchBalance);
 router.get('/api/account/deposit/expense/:userId', controllerAccount.findDepositAndExpenseById);
 router.get('/api/account/deposit/expense', controllerAccount.findDepositAndExpense);
@@ -27,6 +29,7 @@ router.put('/api/user/upload-file/:idUser', uploapFile);
 router.put('/api/user/update-file-documents/:idUser', controllerUser.updateFileDocuments);
 router.put('/api/user/updatePassword', controllerUser.updatePasswordUserLogin);
 router.put('/api/user/photo-update/:idUser', controllerUser.updateFile)
+
 
 //            =====> Petición para actualizar datos generales de usuario
 router.put('/api/user/update/:id', controllerUser.updateUserLogin);
@@ -66,5 +69,9 @@ router.delete('/api/bank/:idBank', controllerBank.deleteBank);
 //            =====> RUTAS MODULO GOOGLE FINANCIAL
 router.get('/api/get-google-fianancial', getFinancialActive);
 router.get('/api/get-google-fianancial-filter-active', getFinancialFilterActive);
+
+
+//            =====> RUTAS MODULO PAYMENTS
+router.post('/api/create-payment', controllerPayment.createPayment);
 
 module.exports = { router };
