@@ -77,7 +77,38 @@ async function getFinancialFilterActive(req, res) {
     }
 }
 
+async function getFinancialInit(req, res) {
+    try {
+        let data = await getDataGoogleService('amazon')
+        if (data) {
+            return response(
+                "Activos encontrados",
+                200,
+                res,
+                "ok",
+                data
+            );
+        } else {
+            return response(
+                "Error al listar países",
+                400,
+                res,
+                "false",
+                []
+            );
+        }
+    } catch (error) {
+        return response(
+            "Error al tratar de consultar las apis de Google Financial",
+            500,
+            res,
+            "false",
+            []
+        );
+    }
+}
 module.exports = {
     getFinancialActive,
-    getFinancialFilterActive
+    getFinancialFilterActive,
+    getFinancialInit
 };
