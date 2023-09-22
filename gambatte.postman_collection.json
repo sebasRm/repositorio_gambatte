@@ -384,6 +384,37 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "api-update-acount-verify",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\":{\r\n    \"accountVerify\": 1,\r\n    \"clientId\": 1,\r\n    \"description\": [\r\n        {\r\n            \"value\": 1,\r\n            \"label\": \"Falta subir los documentos\"\r\n        },\r\n        {\r\n            \"value\": 2,\r\n            \"label\": \"Falta completar los campos\"\r\n        }\r\n    ]\r\n }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/update/acount/verify",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"update",
+								"acount",
+								"verify"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -759,6 +790,40 @@
 								"api",
 								"deposit",
 								"expense"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "modulo_payment",
+			"item": [
+				{
+					"name": "create-payment",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"data\":{\r\n    \"clientId\": \"1\",\r\n    \"actives\": [\r\n        {\r\n            \"title\": \"Netflix Inc\",\r\n            \"price\": \"€412.95\",\r\n            \"price_movement\": {\r\n                \"percentage\": 0.06057669,\r\n                \"value\": 0.25,\r\n                \"movement\": \"Up\"\r\n            },\r\n            \"payment\": {\r\n                \"investmentValue\": 10,\r\n                \"date\": \"10/09/2023\",\r\n                \"hour\": \"14:30 PM\",\r\n                \"result\": 5,\r\n                \"total\": 15,\r\n                \"status\": false\r\n            },\r\n            \"tableData\": {\r\n                \"id\": 0\r\n            }\r\n        },\r\n        {\r\n            \"title\": \"Netflix Inc\",\r\n            \"price\": \"€412.25\",\r\n            \"price_movement\": {\r\n                \"percentage\": 0.26754373,\r\n                \"value\": 1.1000061,\r\n                \"movement\": \"Up\"\r\n            },\r\n            \"payment\": {\r\n                \"investmentValue\": 10,\r\n                \"date\": \"10/09/2023\",\r\n                \"hour\": \"14:30 PM\",\r\n                \"result\": 5,\r\n                \"total\": 15,\r\n                \"status\": false\r\n            },\r\n            \"tableData\": {\r\n                \"id\": 1\r\n            }\r\n        },\r\n        {\r\n            \"title\": \"Netflix Inc\",\r\n            \"price\": \"€412.25\",\r\n            \"price_movement\": {\r\n                \"percentage\": 0.26754373,\r\n                \"value\": 1.1000061,\r\n                \"movement\": \"Up\"\r\n            },\r\n            \"payment\": {\r\n                \"investmentValue\": 10,\r\n                \"date\": \"10/09/2023\",\r\n                \"hour\": \"14:30 PM\",\r\n                \"result\": 5,\r\n                \"total\": 15,\r\n                \"status\": false\r\n            },\r\n            \"tableData\": {\r\n                \"id\": 2\r\n            }\r\n        }\r\n    ]\r\n}\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/create-payment",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"create-payment"
 							]
 						}
 					},

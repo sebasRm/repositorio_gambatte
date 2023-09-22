@@ -549,34 +549,60 @@ async function findUsers(req, res) {
 async function validateEmail(req, res) {
   try {
     const { email, id } = req.body;
-    if (id !== null) {
-      const user = await initModel.user.findOne({ where: { id: id } });
-      if (user) {
-        if (email === user?.email) {
-          return response("Email el del usuario", 200, res, "ok", { email: 1 });
-        }
-        const emailExist = await initModel.user.findOne({ where: { email: email } });
-        if (!emailExist) {
-          return response("Email no es de nadie", 200, res, "ok", { email: 2 });
-        }
-        return response("Email esta siendo utilizado", 200, res, "ok", { email: 3 });
+    const user = await initModel.user.findOne({ where: { id: id } });
+    if (user) {
+      if (email === user?.email) {
+        return response("Email el del usuario", 200, res, "ok", { email: 1 });
       }
-    } else {
       const emailExist = await initModel.user.findOne({ where: { email: email } });
       if (!emailExist) {
         return response("Email no es de nadie", 200, res, "ok", { email: 2 });
       }
       return response("Email esta siendo utilizado", 200, res, "ok", { email: 3 });
     }
-
   } catch (error) {
     throw (error);
   }
 }
 
 
-async function updateDocuments(req, res) {
+async function updateAcountVerify(req, res) {
+  let data_user = req.body.data
+  console.log("data_user.description.length", data_user.description.length)
+  let data ={
+    accountVerify:data_user.accountVerify,
+    description: data_user.description.length > 1 ? data_user.description[0].label+ ' ' + data_user.description[1].label  : data_user.description[0].label
+  }
+  let userUpdate = initModel.user.update(data,{
+    where : {id: data_user.clientId}
+  })
+  if(userUpdate)
+  {
+    let user =await initModel.user.findOne({
+      where : {id: data_user.clientId}
+    })
+    if(user)
+    {
+      return response(
+        "Usuario actualizado exitosamente",
+        200,
+        res,
+        "ok",
+        user
+      );
+    }
+    else{
+      return response(
+        "Error al actualizar el usuario ",
+        400,
+        res,
+        false,
+        []
+      );
+    }
 
+  }
+  console.log("soy el data_user", data_user)
 }
 
 module.exports = {
@@ -591,5 +617,6 @@ module.exports = {
   findUser,
   findUsers,
   updateFinishRegisterUser,
-  validateEmail
+  validateEmail,
+  updateAcountVerify
 };
