@@ -11,7 +11,7 @@ async function createPayment(req, res) {
     let updateBalance;
     let userUpdate;
     let count = 0;
-    req = req.body.data;
+    req = req.body.earningPayment;
     let actives = req.actives;
     console.log('Mostrando datos de la peticion ', JSON.stringify(req));
     let user = await initModel.user.findOne({
