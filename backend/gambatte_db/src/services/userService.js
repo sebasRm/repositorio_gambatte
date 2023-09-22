@@ -44,12 +44,19 @@ async function findUsersServices() {
                     {
                         model: initModel.account,
                         as: "account_",
+                        include: [
+                            {
+                                model: initModel.payment,
+                                as: "payments",
+                            }
+                        ]
                     },
                     {
                         model: initModel.card,
                         as: "cards",
                     },
                 ],
+                // attributes: { exclude: ['password'] }
             });
             if (users) {
                 users.map((user) => {

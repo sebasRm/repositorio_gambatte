@@ -12,7 +12,10 @@ let initModel = initModels(sequelize);
 const bcrypt = require("bcrypt");
 const dotenv = require("dotenv");
 const fs = require("fs");
-const { findUserByIdService, updateStatusActiveService } = require("../services/userService");
+const {
+  findUserByIdService,
+  updateStatusActiveService,
+} = require("../services/userService");
 const { deleteFile } = require("../services/uploadServices");
 const { findAllUsers, emitNotification } = require("../socket/socket");
 
@@ -58,7 +61,7 @@ async function createUser(req, res) {
           registerStatus: true,
           status: true,
           finishRegister: false,
-          indicative: req.user.indicative
+          indicative: req.user.indicative,
         });
         user = await initModel.user.findAll({
           where: {
@@ -73,7 +76,7 @@ async function createUser(req, res) {
         });
         delete user[0].dataValues.password;
         user[0].dataValues.role = user[0].dataValues.rol_.dataValues.role;
-        delete user[0].dataValues.rol_
+        delete user[0].dataValues.rol_;
         if (user) {
           let responses = response(
             STATICVAR.USER_REGISTER_SUCCESSFUL,
@@ -129,7 +132,7 @@ async function userLogin(req, res) {
         {
           model: initModel.account,
           as: "account_",
-        }
+        },
       ],
       attributes: [
         "id",
@@ -147,25 +150,36 @@ async function userLogin(req, res) {
       delete user.dataValues.password;
       if (login) {
         user.dataValues.role = user.dataValues.rol_.dataValues.role;
-        delete user.dataValues.rol_
+        delete user.dataValues.rol_;
         const dataUser = {
           user: user,
           accessToken: generateToken(user),
         };
-        let statusActive = await updateStatusActiveService(user.dataValues.id, true)
+        let statusActive = await updateStatusActiveService(
+          user.dataValues.id,
+          true
+        );
         if (statusActive) {
-          if (user.dataValues.role == 'User') {
-            await emitNotification(`${user.dataValues.fullName} ha iniciado sesión`, 'Admin', 'Inicio de sesión')
+          if (user.dataValues.role == "User") {
+            await emitNotification(
+              `${user.dataValues.fullName} ha iniciado sesión`,
+              "Admin",
+              "Inicio de sesión"
+            );
           }
-          await findAllUsers()
-          return response(
-            "Usuario logeado.", 200, res, "ok", dataUser);
+          await findAllUsers();
+          return response("Usuario logeado.", 200, res, "ok", dataUser);
         }
         return response(STATICVAR.user_ERROR, 400, res, false, []);
       }
-    }
-    else {
-      let responses = response("El usuario no se encuentra registrado", 400, res, false, []);
+    } else {
+      let responses = response(
+        "El usuario no se encuentra registrado",
+        400,
+        res,
+        false,
+        []
+      );
       return responses;
     }
   } catch (error) {
@@ -187,13 +201,17 @@ async function userLogout(req, res) {
       where: { id: req.id },
     });
     if (userOut) {
-      let user = await findUserByIdService(req.id)
+      let user = await findUserByIdService(req.id);
       if (user) {
-        if (user.dataValues.role == 'User') {
-          console.log('llego aqui ', status);
-          await emitNotification(`${user.dataValues.fullName} ha cerrado sesión`, 'Admin', 'Cierre de sesión')
+        if (user.dataValues.role == "User") {
+          console.log("llego aqui ", status);
+          await emitNotification(
+            `${user.dataValues.fullName} ha cerrado sesión`,
+            "Admin",
+            "Cierre de sesión"
+          );
         }
-        await findAllUsers()
+        await findAllUsers();
         return response(STATICVAR.USER_LOGOUT, 200, res, "ok", []);
       }
     }
@@ -278,85 +296,121 @@ async function updatePasswordUserLogin(req, res) {
 const validateFile = async (files) => {
   return new Promise(async (resolve, reject) => {
     if (files.length > 0) {
-      resolve(true)
+      resolve(true);
     } else {
-      reject(false)
+      reject(false);
     }
-
-  })
-}
-
+  });
+};
 
 async function updateFile(req, res) {
-  let user = null
-  let { idUser } = req.params
-  let { fileName } = req.body
+  let user = null;
+  let { idUser } = req.params;
+  let { fileName } = req.body;
   try {
-    user = await findUserByIdService(idUser)
+    user = await findUserByIdService(idUser);
     if (user && user.dataValues.avatar) {
       if (deleteFile(user.dataValues.avatar)) {
-        user = await initModel.user.update({ avatar: fileName }, {
-          where: { id: idUser },
-        });
+        user = await initModel.user.update(
+          { avatar: fileName },
+          {
+            where: { id: idUser },
+          }
+        );
         if (user[0] == "1") {
-          user = await findUserByIdService(idUser)
-          return response(STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL, 200, res, "ok", user);
+          user = await findUserByIdService(idUser);
+          return response(
+            STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL,
+            200,
+            res,
+            "ok",
+            user
+          );
         }
+      } else {
+        return false;
       }
-      else {
-        return false
-      }
-    }
-    else {
-      user = await initModel.user.update({ avatar: fileName }, {
-        where: { id: idUser },
-      });
+    } else {
+      user = await initModel.user.update(
+        { avatar: fileName },
+        {
+          where: { id: idUser },
+        }
+      );
       if (user[0] == "1") {
-        user = await findUserByIdService(idUser)
-        return response(STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL, 200, res, "ok", user);
+        user = await findUserByIdService(idUser);
+        return response(
+          STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL,
+          200,
+          res,
+          "ok",
+          user
+        );
       }
     }
-
   } catch (error) {
     throw (STATICVAR.USER_UPDATE_AVATAR_ERROR_METHOD, error);
   }
 }
 
 async function updateFileDocuments(req, res) {
-  let user = null
-  let { idUser } = req.params
-  let { documents } = req.body
+  let user = null;
+  let { idUser } = req.params;
+  let { documents } = req.body;
   try {
-    user = await findUserByIdService(idUser)
-    if (user && user.dataValues.documentImagenFront && user.dataValues.documentImagenPost) {
-      if (deleteFile([user.dataValues.documentImagenFront, user.dataValues.documentImagenPost])) {
-        user = await initModel.user
-          .update(
-            {
-              documentImagenFront: documents.documentImagenFront,
-              documentImagenPost: documents.documentImagenPost
-            },
-            {
-              where: { id: idUser },
-            });
+    user = await findUserByIdService(idUser);
+    if (
+      user &&
+      user.dataValues.documentImagenFront &&
+      user.dataValues.documentImagenPost
+    ) {
+      if (
+        deleteFile([
+          user.dataValues.documentImagenFront,
+          user.dataValues.documentImagenPost,
+        ])
+      ) {
+        user = await initModel.user.update(
+          {
+            documentImagenFront: documents.documentImagenFront,
+            documentImagenPost: documents.documentImagenPost,
+          },
+          {
+            where: { id: idUser },
+          }
+        );
         if (user[0] == "1") {
-          user = await findUserByIdService(idUser)
-          return response(STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL, 200, res, "ok", user);
+          user = await findUserByIdService(idUser);
+          return response(
+            STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL,
+            200,
+            res,
+            "ok",
+            user
+          );
         }
-      }
-      else {
-        return false
+      } else {
+        return false;
       }
     } else {
-      user = await initModel.user.update({
-        documentImagenFront: documents.documentImagenFront,
-        documentImagenPost: documents.documentImagenPost
-      }, {
-        where: { id: idUser },
-      });
+      user = await initModel.user.update(
+        {
+          documentImagenFront: documents.documentImagenFront,
+          documentImagenPost: documents.documentImagenPost,
+        },
+        {
+          where: { id: idUser },
+        }
+      );
       if (user[0] == "1") {
-        user = await findUserByIdService(idUser)
-        return response(STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL, 200, res, "ok", user);
+        user = await findUserByIdService(idUser);
+        return response(
+          STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL,
+          200,
+          res,
+          "ok",
+          user
+        );
       }
     }
   } catch (error) {
@@ -371,7 +425,8 @@ async function updateFileDocuments(req, res) {
 async function updateUserLogin(req, res) {
   try {
     const { id } = req.params;
-    const { fullName, email, phone, documentNumber, postalCode, indicative } = req.body.data.user;
+    const { fullName, email, phone, documentNumber, postalCode, indicative } =
+      req.body.data.user;
     let { documentType } = req.body.data.user;
     // Reivisar bien la logica para los tipos de documentos...
     let data = {
@@ -382,7 +437,7 @@ async function updateUserLogin(req, res) {
       documentType: documentType,
       postalCode: postalCode,
       finishRegister: true,
-      indicative: indicative
+      indicative: indicative,
     };
     await initModel.user.update(data, {
       where: { id: id },
@@ -391,7 +446,7 @@ async function updateUserLogin(req, res) {
     let user = await initModel.user.findOne({
       where: { id: id },
     });
-    delete user.dataValues.password
+    delete user.dataValues.password;
     if (user) {
       let responses = response(
         "Usuario actualizado exitosamente",
@@ -422,10 +477,9 @@ async function updateUserLogin(req, res) {
 
 async function updateFinishRegisterUser(req, res) {
   try {
-    const { userId } =
-      req.params;
+    const { userId } = req.params;
     let data = {
-      finishRegister: true
+      finishRegister: true,
     };
     await initModel.user.update(data, {
       where: { id: userId },
@@ -434,7 +488,7 @@ async function updateFinishRegisterUser(req, res) {
     let user = await initModel.user.findOne({
       where: { id: userId },
     });
-    delete user.dataValues.password
+    delete user.dataValues.password;
     if (user) {
       let responses = response(
         "Usuario actualizado exitosamente",
@@ -459,10 +513,9 @@ async function updateFinishRegisterUser(req, res) {
   }
 }
 
-
 async function findUser(req, res) {
   try {
-    const { role } = req.headers
+    const { role } = req.headers;
     const { userId } = req.params;
     let user = await initModel.user.findOne({
       where: { id: userId },
@@ -475,21 +528,20 @@ async function findUser(req, res) {
           model: initModel.account,
           as: "account_",
         },
-
       ],
     });
-    if (role == 'User') {
-      delete user.dataValues.documentNumber
-      delete user.dataValues.documentType
-      delete user.dataValues.statusActive
-      delete user.dataValues.account_idaccount
-      delete user.dataValues.postalCode
-      delete user.dataValues.role
+    if (role == "User") {
+      delete user.dataValues.documentNumber;
+      delete user.dataValues.documentType;
+      delete user.dataValues.statusActive;
+      delete user.dataValues.account_idaccount;
+      delete user.dataValues.postalCode;
+      delete user.dataValues.role;
     }
     delete user.dataValues.password;
     user.dataValues.role = user.dataValues.rol_.dataValues.role;
-    delete user.dataValues.rol_idrol
-    delete user.dataValues.rol_
+    delete user.dataValues.rol_idrol;
+    delete user.dataValues.rol_;
     if (user) {
       let responses = response("Users", 200, res, "ok", user);
       return responses;
@@ -504,7 +556,7 @@ async function findUser(req, res) {
 
 async function findUsers(req, res) {
   try {
-    const { role } = req.headers
+    const { role } = req.headers;
 
     let users = await initModel.user.findAll({
       include: [
@@ -526,15 +578,15 @@ async function findUsers(req, res) {
       users.map((user) => {
         delete user.dataValues.password;
         user.dataValues.role = user.dataValues.rol_.dataValues.role;
-        delete user.dataValues.rol_idrol
-        delete user.dataValues.rol_
-        delete user.dataValues.documentNumber
-        delete user.dataValues.documentType
+        delete user.dataValues.rol_idrol;
+        delete user.dataValues.rol_;
+        delete user.dataValues.documentNumber;
+        delete user.dataValues.documentType;
         // delete user.dataValues.statusActive
-        delete user.dataValues.account_idaccount
-        delete user.dataValues.postalCode
+        delete user.dataValues.account_idaccount;
+        delete user.dataValues.postalCode;
         // delete user.dataValues.role
-      })
+      });
       let responses = response("Users", 200, res, "ok", users);
       return responses;
     } else {
@@ -554,55 +606,46 @@ async function validateEmail(req, res) {
       if (email === user?.email) {
         return response("Email el del usuario", 200, res, "ok", { email: 1 });
       }
-      const emailExist = await initModel.user.findOne({ where: { email: email } });
+      const emailExist = await initModel.user.findOne({
+        where: { email: email },
+      });
       if (!emailExist) {
         return response("Email no es de nadie", 200, res, "ok", { email: 2 });
       }
-      return response("Email esta siendo utilizado", 200, res, "ok", { email: 3 });
+      return response("Email esta siendo utilizado", 200, res, "ok", {
+        email: 3,
+      });
     }
   } catch (error) {
-    throw (error);
+    return response("Lo sentimos ha ocurrido un error interno ", 500, res, "false", []);
   }
 }
 
-
 async function updateAcountVerify(req, res) {
-  let data_user = req.body.data
-  console.log("data_user.description.length", data_user.description.length)
-  let data ={
-    accountVerify:data_user.accountVerify,
-    description: data_user.description.length > 1 ? data_user.description[0].label+ ' ' + data_user.description[1].label  : data_user.description[0].label
-  }
-  let userUpdate = initModel.user.update(data,{
-    where : {id: data_user.clientId}
-  })
-  if(userUpdate)
-  {
-    let user =await initModel.user.findOne({
-      where : {id: data_user.clientId}
-    })
-    if(user)
-    {
-      return response(
-        "Usuario actualizado exitosamente",
-        200,
-        res,
-        "ok",
-        user
-      );
+  let data_user = req.body.data;
+  console.log("data_user.description.length", data_user.description.length, data_user)
+  let data = {
+    accountVerify: data_user.accountVerify,
+    description:
+      data_user.description.length > 1
+        ? data_user.description[0].label + " " + data_user.description[1].label
+        : data_user.description[0].label,
+  };
+  try {
+    let userUpdate = initModel.user.update(data, {
+      where: { id: data_user.clientId },
+    });
+    if (userUpdate) {
+      let user = await findUserByIdService(data_user.clientId)
+      if (user) {
+        return response("Usuario actualizado exitosamente", 200, res, "ok", user);
+      } else {
+        return response("Error al actualizar el usuario ", 400, res, false, []);
+      }
     }
-    else{
-      return response(
-        "Error al actualizar el usuario ",
-        400,
-        res,
-        false,
-        []
-      );
-    }
-
+  } catch (error) {
+    return response("Lo sentimos ha ocurrido un error interno ", 500, res, "false", []);
   }
-  console.log("soy el data_user", data_user)
 }
 
 module.exports = {
@@ -618,5 +661,5 @@ module.exports = {
   findUsers,
   updateFinishRegisterUser,
   validateEmail,
-  updateAcountVerify
+  updateAcountVerify,
 };

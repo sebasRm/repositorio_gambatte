@@ -11,7 +11,7 @@ const controllerPayment = require('../controllers/paymentAdapter')
 
 const { uploapFile, getImageFile } = require('../services/uploadServices');
 const { getCountries, getCountryById } = require("../controllers/country");
-const { getFinancialActive, getFinancialFilterActive } = require("../controllers/financialDataController");
+const { getFinancialActive, getFinancialFilterActive, getFinancialInit } = require("../controllers/financialDataController");
 
 const router = express();
 router.use(morgan('dev'));
@@ -69,6 +69,7 @@ router.delete('/api/bank/:idBank', controllerBank.deleteBank);
 
 //            =====> RUTAS MODULO GOOGLE FINANCIAL
 router.get('/api/get-google-fianancial', getFinancialActive);
+router.get('/api/get-google-fianancial-init', getFinancialInit);
 router.get('/api/get-google-fianancial-filter-active', getFinancialFilterActive);
 
 
