@@ -76,6 +76,12 @@ async function createPayment(req, res) {
             {
               model: initModel.account,
               as: "account_",
+              include : [
+                {
+                  model: initModel.payment,
+                  as: "payments",
+                }
+              ]
             },
           ],
           attributes : {exclude :['password']}
@@ -96,7 +102,7 @@ async function createPayment(req, res) {
       return response("error usuario no encontrado ", 400, res, "false", []);
     }
   } catch (error) {
-    throw error;
+    return response("error usuario no encontrado ", 500, res, "false", []);;
   }
 }
 
