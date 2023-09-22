@@ -1,3 +1,5 @@
+import { findUserByIdService, findUsersServices } from "../services/userService";
+
 const sequelize = require("../db/connectionDB").sequelize;
 const initModels = require("../models/init-models");
 const response = require("../helpers/utils").response;
@@ -11,9 +13,8 @@ async function createPayment(req, res) {
     let updateBalance;
     let userUpdate;
     let count = 0;
-    req = req.body.earningPayment;
+    req = req.body.data.earningPayment;
     let actives = req.actives;
-    console.log('Mostrando datos de la peticion ', JSON.stringify(req));
     let user = await initModel.user.findOne({
       where: { id: req.clientId },
       include: [
@@ -26,7 +27,6 @@ async function createPayment(req, res) {
     if (user) {
       for (let active in actives) {
         let data_actives = actives[active];
-        // console.log("data_actives", data_actives)
         await initModel.payment.create({
           title: data_actives.title,
           price: data_actives.price,
@@ -76,6 +76,12 @@ async function createPayment(req, res) {
             {
               model: initModel.account,
               as: "account_",
+              include: [
+                {
+                  model: initModel.payment,
+                  as: "payments",
+                }
+              ]
             },
           ],
           attributes: { exclude: ['password'] }
@@ -96,16 +102,35 @@ async function createPayment(req, res) {
       return response("error usuario no encontrado ", 400, res, "false", []);
     }
   } catch (error) {
+    console.log(error);
     return response("Lo sentimos ha ocurrido un error interno ", 500, res, "false", []);
   }
 }
 
 async function findAllPayments(req, res) {
   try {
+    let payments = await findUsersServices()
+    if (payments) {
+      return response("Pagos y ganancias", 200, res, "ok", payments);
+    } else {
+      return response(
+        "Error al buscar los pagos y ganancias",
+        400,
+        res,
+        "false",
+        []
+      );
+    }
+  } catch (error) {
+    return response("Lo sentimos ha ocurrido un error interno ", 500, res, "false", []);
+  }
+}
+
+async function findAllPaymentsById(req, res) {
+  try {
     let payments = await initModel.payment.findAll({});
     if (payments) {
       return response("Pagos y ganancias", 200, res, "ok", payments);
-      return responses;
     } else {
       return response(
         "Error al buscar los pagos y ganancias",
