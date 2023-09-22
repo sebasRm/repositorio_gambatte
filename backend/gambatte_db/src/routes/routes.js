@@ -1,4 +1,5 @@
 const express = require("express");
+let morgan = require('morgan')
 const fileUpload = require('express-fileupload')
 const controllerUser = require('../controllers/userController');
 const controllerAccount = require('../controllers/accountController');
@@ -12,7 +13,7 @@ const { getCountries, getCountryById } = require("../controllers/country");
 const { getFinancialActive, getFinancialFilterActive } = require("../controllers/financialDataController");
 
 const router = express.Router();
-
+router.use(morgan('dev'));
 //            =====> RUTAS MODULO USUARIO
 router.post('/api/user', controllerUser.createUser);
 router.post('/api/validate/email', controllerUser.validateEmail);

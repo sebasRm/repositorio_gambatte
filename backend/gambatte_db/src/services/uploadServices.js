@@ -107,11 +107,11 @@ function getImageFile(req, res) {
 const deleteFile = (file) => {
   if (file.length > 0) {
     for (let i = 0; i < file.length; i++) {
-      console.log('Mostrando files', file, file[i]);
       let pathFIle = `./src/storage/images/${file[i]}`;
       try {
         fs.unlinkSync(pathFIle);
         if (i == file.length) {
+          console.log('Mostrando files', file, file[i]);
           return true;
         }
       } catch (err) {
