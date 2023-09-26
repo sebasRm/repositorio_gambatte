@@ -621,32 +621,59 @@ async function validateEmail(req, res) {
   }
 }
 
-async function updateAcountVerify(req, res) {
-  let data_user = req.body.data;
-  console.log("data_user.description.length", data_user.description.length, data_user)
-  let data = {
-    accountVerify: data_user.accountVerify,
-    description:
-      data_user.description.length > 1
-        ? data_user.description[0].label + " " + data_user.description[1].label
-        : data_user.description[0].label,
-  };
-  try {
-    let userUpdate = initModel.user.update(data, {
-      where: { id: data_user.clientId },
-    });
-    if (userUpdate) {
-      let user = await findUserByIdService(data_user.clientId)
-      if (user) {
-        return response("Usuario actualizado exitosamente", 200, res, "ok", user);
-      } else {
-        return response("Error al actualizar el usuario ", 400, res, false, []);
-      }
+async function findData(data_user){
+  let data = ''
+  let descriptions = data_user.description
+  if(descriptions.length > 1)
+  {
+    for(let description in descriptions)
+    {
+      data+=data_user.description[description].label + ' '
     }
-  } catch (error) {
-    return response("Lo sentimos ha ocurrido un error interno ", 500, res, "false", []);
+  }
+  else
+  {
+    data+=data_user.description[0].label
+  }
+  return data
+}
+
+async function updateAcountVerify(req, res) {
+  let data_user = req.body.data
+  let data ={
+    accountVerify:data_user.accountVerify,
+    description: await findData(data_user)
+   }
+  let userUpdate = initModel.user.update(data,{
+    where : {id: data_user.clientId}
+  })
+  if(userUpdate)
+  {
+    let user =await initModel.user.findOne({
+      where : {id: data_user.clientId}
+    })
+    if(user)
+    {
+      return response(
+        "Usuario actualizado exitosamente",
+        200, 
+        res,
+        "ok",
+        user
+      );
+    }
+    else{
+      return response(
+        "Error al actualizar el usuario ",
+        400,
+        res,
+        false,
+        []
+      );
+    }
   }
 }
+
 
 module.exports = {
   userLogin,
