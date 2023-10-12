@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "a81605e1-524b-441c-9f1d-b1a803e69c7c",
+		"_postman_id": "6c3e0c7e-d552-4218-a033-b1a1f4918b86",
 		"name": "gambatte",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14634656"
 	},
 	"item": [
 		{
@@ -411,6 +412,37 @@
 								"update",
 								"acount",
 								"verify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "api-user-update-file-documents",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"documents\":{\r\n        \"documentImagenFront\":\"test1\",\r\n        \"documentImagenPost\":\"test2\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:4000/api/user/update-file-documents/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "4000",
+							"path": [
+								"api",
+								"user",
+								"update-file-documents",
+								"1"
 							]
 						}
 					},

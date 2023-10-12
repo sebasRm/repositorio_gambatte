@@ -34,17 +34,20 @@ const validateExtension = async (img, res) => {
       nameImage = nameImage[0];
       let data = '"' + nameImage + '"' + ":" + '"' + fileName + '"';
       responseData += data;
-      console.log("data", responseData);
+
       let route = `./src/storage/images/${fileName}`;
       img.mv(`${route}`, (error) => {
         if (error) {
           return response(
-            STATICVAR.USER_UPDATE_AVATAR_ERROR,
+            'Archivos subidos exitosamente',
             400,
             res,
             false,
             []
           );
+        }
+        else{
+          return resolve(true);
         }
       });
     }
@@ -63,6 +66,7 @@ const uploapFile = async (req, res) => {
   let keysFiles = Object.keys(req.files);
   let keysValues = Object.values(req.files);
 
+  
   if (keysFiles.length > 1) {
     for (const keys in keysValues) {
       validateExtension(keysValues[keys], res);
@@ -70,6 +74,27 @@ const uploapFile = async (req, res) => {
     responseData = responseData.replaceAll('""', '","');
     let dataNew = "{" + responseData + "}";
     let data = JSON.parse(dataNew);
+    responseData = ""; 
+    if (data) {
+      return response(
+        'Archivo subido exitosamente',
+        200,
+        res,
+        "ok",
+        data
+      );
+    }
+
+
+  } else {
+ 
+   // console.log("soy va una imagen ", keysValues[0])
+    let responses = await validateExtension(keysValues[0], res);
+    responseData = responseData.replaceAll('""', '","');
+    //console.log("soy va una responseData", responseData)
+    let dataNew = "{" + responseData + "}";
+    let data = JSON.parse(dataNew);
+   
     if (data) {
       return response(
         STATICVAR.USER_UPDATE_AVATAR_SUCCESSFULL,
@@ -77,17 +102,6 @@ const uploapFile = async (req, res) => {
         res,
         "ok",
         data
-      );
-    }
-  } else {
-    let responses = await validateExtension(keysValues[0], responseData, res);
-    if (responses.length > 0) {
-      return response(
-        STATICVAR.USER_UPDATE_AVATAR_SUCCESSFULL,
-        200,
-        res,
-        "ok",
-        responseData[0]
       );
     }
   }
