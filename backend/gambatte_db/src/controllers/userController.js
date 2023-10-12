@@ -69,6 +69,7 @@ async function createUser(req, res) {
           status: true,
           finishRegister: false,
           indicative: req.user.indicative,
+          accountVerify: req.user.role !== 3 || req.user.role !== 1 ? 2 : 1
         });
         user = await initModel.user.findAll({
           where: {

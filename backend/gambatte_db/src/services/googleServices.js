@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const SerpApi = require('google-search-results-nodejs');
-const search = new SerpApi.GoogleSearch(process.env.APY_KEY_GOOGLE_1);
+const search = new SerpApi.GoogleSearch(process.env.APY_KEY_GOOGLE_2);
 
 
 const getDataGoogleService = (param) => {
