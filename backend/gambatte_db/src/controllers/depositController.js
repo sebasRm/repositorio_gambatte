@@ -302,9 +302,10 @@ async function updateDepositAndExpenses(req, res) {
     if (userUpdate) {
       await getPaymentsNotificationsUser()
       await getAllDepositsAndExpenses1()
-      deposit == true ?
+      dataDeposit == true ?
         await emitNotification(`Se ha aprobado un depósito con valor de ${formatPrice(amount)} USD`, 'User', 'Depósito')
         : await emitNotification(`Se ha aprobado un retiro con valor de ${formatPrice(amount)} USD`, 'User', 'Retiro')
+
       return response(
         "Despósito aceptado con exito",
         200,

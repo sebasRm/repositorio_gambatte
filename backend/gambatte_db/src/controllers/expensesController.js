@@ -93,8 +93,7 @@ async function createExpenses(req, res) {
   try {
     const { id, idUser, fullName, email } = req.body.data.user;
     const { bank, keyAccount, amount, swiftCode, hour } = req.body.data.expenses;
-    let countRow = await initModel.user.update({ fullName }, { where: { id: id } })
-
+    let countRow = await initModel.user.update(fullName, { where: { id: id } })
     if (countRow) {
       let user = await initModel.user.findOne({ where: { id: id } })
       if (user) {
@@ -109,6 +108,7 @@ async function createExpenses(req, res) {
           hour: hour
         });
         if (expense) {
+          // console.log('createExpenses', expense);
           await emitNotificationCreationDepositExpenses(`${fullName} ha solicitado un retiro.`, 'Admin', 'Retiro')
           await getPaymentsNotificationsUser()
           // await getCantDepositsExpenses()
@@ -125,6 +125,7 @@ async function createExpenses(req, res) {
     }
 
   } catch (error) {
+    console.log(error);
     return response("Ha ocurrido un error interno", 500, res, "false", [])
   }
 }

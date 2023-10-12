@@ -17,7 +17,7 @@ const {
   updateStatusActiveService,
 } = require("../services/userService");
 const { deleteFile } = require("../services/uploadServices");
-const { findAllUsers, emitNotification } = require("../socket/socket");
+const { findAllUsers, emitNotification, findAllUsersSockets, InitgetAllUsers } = require("../socket/socket");
 
 dotenv.config();
 let port = process.env.PORT;
@@ -32,6 +32,7 @@ async function createUser(req, res) {
   let userExist;
   let idUserExist;
   req = req.body.data;
+
   try {
     let idUser = randomIdUser(8);
     idUserExist = await initModel.user.findAll({
@@ -46,7 +47,11 @@ async function createUser(req, res) {
         },
       });
       if (userExist.length == 0) {
-        const password = await bcrypt.hash(req.user.password, 10);
+        let password = ''
+        if (req.user.password) {
+          password = await bcrypt.hash(req.user.password, 10);
+        }
+
         let account = await initModel.account.create({});
 
         let userCreate = await initModel.user.create({
@@ -58,6 +63,8 @@ async function createUser(req, res) {
           rol_idrol: req.user.role,
           account_idaccount: account.dataValues.idAccount,
           termsAndConditions: req.user.termAndConditions,
+          documentNumber: req.user?.documentNumber ? req.user?.documentNumber : null,
+          documentType: req.user?.documentType ? req.user?.documentType : null,
           registerStatus: true,
           status: true,
           finishRegister: false,
@@ -118,6 +125,7 @@ async function createUser(req, res) {
  * Función para consultar si el usuario que se esta logeando existe
  * en la base de datos y si coinciden los datos de entrada.
  */
+
 async function userLogin(req, res) {
   req = req.body.data.user;
   const { password } = req;
@@ -155,35 +163,48 @@ async function userLogin(req, res) {
           user: user,
           accessToken: generateToken(user),
         };
-        let statusActive = await updateStatusActiveService(
-          user.dataValues.id,
-          true
-        );
-        if (statusActive) {
-          if (user.dataValues.role == "User") {
-            await emitNotification(
-              `${user.dataValues.fullName} ha iniciado sesión`,
-              "Admin",
-              "Inicio de sesión"
-            );
+        console.log('Aqui llego : ', user.dataValues.role);
+        if (user.dataValues.role === "User") {
+          let statusActive = await updateStatusActiveService(
+            user.dataValues.id,
+            true
+          );
+          if (statusActive) {
+            if (user.dataValues.role !== "Admin") {
+              await emitNotification(
+                `${user.dataValues.fullName} ha iniciado sesión`,
+                "Admin",
+                "Inicio de sesión"
+              );
+            }
+            await findAllUsersSockets();
+            return response("Usuario logeado.", 200, res, "ok", dataUser);
           }
-          await findAllUsers();
+          return response(STATICVAR.user_ERROR, 400, res, false, []);
+        }
+        else {
           return response("Usuario logeado.", 200, res, "ok", dataUser);
         }
-        return response(STATICVAR.user_ERROR, 400, res, false, []);
+      } else {
+        let responses = response(
+          "El usuario no se encuentra registrado",
+          400,
+          res,
+          false,
+          []
+        );
+        return responses;
       }
-    } else {
-      let responses = response(
-        "El usuario no se encuentra registrado",
-        400,
-        res,
-        false,
-        []
-      );
-      return responses;
     }
   } catch (error) {
-    throw (STATICVAR.user_ERROR_METHOD, error);
+    response(
+      STATICVAR.user_ERROR_METHOD,
+      400,
+      res,
+      false,
+      []
+    );
+    // throw (STATICVAR.user_ERROR_METHOD, error);
   }
 }
 
@@ -211,7 +232,8 @@ async function userLogout(req, res) {
             "Cierre de sesión"
           );
         }
-        await findAllUsers();
+        await findAllUsersSockets()
+
         return response(STATICVAR.USER_LOGOUT, 200, res, "ok", []);
       }
     }
@@ -239,6 +261,8 @@ async function deleteUserLogin(req, res) {
         "ok",
         []
       );
+      await InitgetAllUsers()
+      await findAllUsersSockets()
       return responses;
     } else {
       let responses = response(
@@ -429,6 +453,7 @@ async function updateUserLogin(req, res) {
       req.body.data.user;
     let { documentType } = req.body.data.user;
     // Reivisar bien la logica para los tipos de documentos...
+    // Falta revisar este metodo si el usuario es administrador el campo finishRegister debe de ir en true o null
     let data = {
       fullName: fullName,
       email: email,
@@ -443,10 +468,7 @@ async function updateUserLogin(req, res) {
       where: { id: id },
     });
 
-    let user = await initModel.user.findOne({
-      where: { id: id },
-    });
-    delete user.dataValues.password;
+    let user = await findUserByIdService(id)
     if (user) {
       let responses = response(
         "Usuario actualizado exitosamente",
@@ -580,8 +602,8 @@ async function findUsers(req, res) {
         user.dataValues.role = user.dataValues.rol_.dataValues.role;
         delete user.dataValues.rol_idrol;
         delete user.dataValues.rol_;
-        delete user.dataValues.documentNumber;
-        delete user.dataValues.documentType;
+        // delete user.dataValues.documentNumber;
+        // delete user.dataValues.documentType;
         // delete user.dataValues.statusActive
         delete user.dataValues.account_idaccount;
         delete user.dataValues.postalCode;
@@ -601,79 +623,94 @@ async function findUsers(req, res) {
 async function validateEmail(req, res) {
   try {
     const { email, id } = req.body;
-    const user = await initModel.user.findOne({ where: { id: id } });
-    if (user) {
-      if (email === user?.email) {
-        return response("Email el del usuario", 200, res, "ok", { email: 1 });
+    if (id !== null) {
+      const user = await initModel.user.findOne({ where: { id: id } });
+      if (user) {
+        if (email === user?.email) {
+          return response("Email el del usuario", 200, res, "ok", { email: 1 });
+        }
+        const emailExist = await initModel.user.findOne({
+          where: { email: email },
+        });
+        if (!emailExist) {
+          return response("Email no es de nadie", 200, res, "ok", { email: 2 });
+        }
+        return response("Email esta siendo utilizado", 200, res, "ok", {
+          email: 3,
+        });
+      } else {
+        if (email !== null) {
+          const emailExist = await initModel.user.findOne({
+            where: { email: email },
+          });
+          if (!emailExist) {
+            return response("Email no es de nadie", 200, res, "ok", { email: 2 });
+          }
+          return response("Email esta siendo utilizado", 200, res, "ok", { email: 3 });
+        } else {
+          return response("Email no es de nadie", 500, res, "ok", { email: 4 });
+        }
       }
-      const emailExist = await initModel.user.findOne({
-        where: { email: email },
-      });
-      if (!emailExist) {
+    } else {
+      if (email !== null) {
+        const emailExist = await initModel.user.findOne({
+          where: { email: email },
+        });
+        if (!emailExist) {
+          return response("Email no es de nadie", 200, res, "ok", { email: 2 });
+        }
+        return response("Email esta siendo utilizado", 200, res, "ok", { email: 3 });
+      } else {
         return response("Email no es de nadie", 200, res, "ok", { email: 2 });
       }
-      return response("Email esta siendo utilizado", 200, res, "ok", {
-        email: 3,
-      });
     }
   } catch (error) {
-    return response("Lo sentimos ha ocurrido un error interno ", 500, res, "false", []);
+    return response("Ha ocurrido un error interno", 500, res, "ok", { email: 4 });
   }
 }
 
-async function findData(data_user){
-  let data = ''
-  let descriptions = data_user.description
-  if(descriptions.length > 1)
-  {
-    for(let description in descriptions)
-    {
-      data+=data_user.description[description].label + ' '
+async function findData(data_user) {
+  let data = "";
+  let descriptions = data_user.description;
+  if (descriptions.length > 1) {
+    for (let description in descriptions) {
+      data += data_user.description[description].label + ",";
     }
+  } else {
+    data += data_user.description[0].label;
   }
-  else
-  {
-    data+=data_user.description[0].label
-  }
-  return data
+  data = data.slice(0, data.length - 1);
+  return data;
 }
 
 async function updateAcountVerify(req, res) {
-  let data_user = req.body.data
-  let data ={
-    accountVerify:data_user.accountVerify,
-    description: await findData(data_user)
-   }
-  let userUpdate = initModel.user.update(data,{
-    where : {id: data_user.clientId}
-  })
-  if(userUpdate)
-  {
-    let user =await initModel.user.findOne({
-      where : {id: data_user.clientId}
-    })
-    if(user)
-    {
-      return response(
-        "Usuario actualizado exitosamente",
-        200, 
-        res,
-        "ok",
-        user
-      );
-    }
-    else{
-      return response(
-        "Error al actualizar el usuario ",
-        400,
-        res,
-        false,
-        []
-      );
+  let data_user = req.body.data;
+  let data;
+  if (data_user.accountVerify == 1) {
+    data = {
+      accountVerify: data_user.accountVerify,
+      description: "",
+    };
+  } else {
+    data = {
+      accountVerify: data_user.accountVerify,
+      description: await findData(data_user),
+    };
+  }
+  let userUpdate = initModel.user.update(data, {
+    where: { id: data_user.clientId },
+  });
+  if (userUpdate) {
+    let user = await initModel.user.findOne({
+      where: { id: data_user.clientId },
+    });
+    if (user) {
+      return response("Usuario actualizado exitosamente", 200, res, "ok", user);
+    } else {
+      return response("Error al actualizar el usuario ", 400, res, false, []);
     }
   }
 }
-
 
 module.exports = {
   userLogin,

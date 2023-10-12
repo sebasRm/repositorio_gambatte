@@ -137,10 +137,10 @@ export const InitgetAllUsers = async () => {
   });
 }
 
-export const findAllUsers = async () => {
+export const findAllUsersSockets = async () => {
   try {
     let users = await findUsersServices()
-    //console.log("dataUsers desde el controller", dataUsers);
+    // console.log("dataUsers desde el socket", users);
     io.emit("users", { users });
   } catch (error) {
     throw error;
