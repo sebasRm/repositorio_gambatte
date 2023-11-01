@@ -17,7 +17,12 @@ const {
   updateStatusActiveService,
 } = require("../services/userService");
 const { deleteFile } = require("../services/uploadServices");
-const { findAllUsers, emitNotification, findAllUsersSockets, InitgetAllUsers } = require("../socket/socket");
+const {
+  findAllUsers,
+  emitNotification,
+  findAllUsersSockets,
+  InitgetAllUsers,
+} = require("../socket/socket");
 
 dotenv.config();
 let port = process.env.PORT;
@@ -47,7 +52,7 @@ async function createUser(req, res) {
         },
       });
       if (userExist.length == 0) {
-        let password = ''
+        let password = "";
         if (req.user.password) {
           password = await bcrypt.hash(req.user.password, 10);
         }
@@ -63,13 +68,15 @@ async function createUser(req, res) {
           rol_idrol: req.user.role,
           account_idaccount: account.dataValues.idAccount,
           termsAndConditions: req.user.termAndConditions,
-          documentNumber: req.user?.documentNumber ? req.user?.documentNumber : null,
+          documentNumber: req.user?.documentNumber
+            ? req.user?.documentNumber
+            : null,
           documentType: req.user?.documentType ? req.user?.documentType : null,
           registerStatus: true,
           status: true,
           finishRegister: false,
           indicative: req.user.indicative,
-          accountVerify: req.user.role !== 3 || req.user.role !== 1 ? 2 : 1
+          accountVerify: req.user.role !== 3 || req.user.role !== 1 ? 2 : 1,
         });
         user = await initModel.user.findAll({
           where: {
@@ -164,7 +171,7 @@ async function userLogin(req, res) {
           user: user,
           accessToken: generateToken(user),
         };
-        console.log('Aqui llego : ', user.dataValues.role);
+        console.log("Aqui llego : ", user.dataValues.role);
         if (user.dataValues.role === "User") {
           let statusActive = await updateStatusActiveService(
             user.dataValues.id,
@@ -182,8 +189,7 @@ async function userLogin(req, res) {
             return response("Usuario logeado.", 200, res, "ok", dataUser);
           }
           return response(STATICVAR.user_ERROR, 400, res, false, []);
-        }
-        else {
+        } else {
           return response("Usuario logeado.", 200, res, "ok", dataUser);
         }
       } else {
@@ -198,13 +204,7 @@ async function userLogin(req, res) {
       }
     }
   } catch (error) {
-    response(
-      STATICVAR.user_ERROR_METHOD,
-      400,
-      res,
-      false,
-      []
-    );
+    response(STATICVAR.user_ERROR_METHOD, 400, res, false, []);
     // throw (STATICVAR.user_ERROR_METHOD, error);
   }
 }
@@ -233,7 +233,7 @@ async function userLogout(req, res) {
             "Cierre de sesión"
           );
         }
-        await findAllUsersSockets()
+        await findAllUsersSockets();
 
         return response(STATICVAR.USER_LOGOUT, 200, res, "ok", []);
       }
@@ -262,8 +262,8 @@ async function deleteUserLogin(req, res) {
         "ok",
         []
       );
-      await InitgetAllUsers()
-      await findAllUsersSockets()
+      await InitgetAllUsers();
+      await findAllUsersSockets();
       return responses;
     } else {
       let responses = response(
@@ -356,6 +356,7 @@ async function updateFile(req, res) {
         return false;
       }
     } else {
+      console.log("updateFile", fileName);
       user = await initModel.user.update(
         { avatar: fileName },
         {
@@ -390,10 +391,8 @@ async function updateFileDocuments(req, res) {
       user.dataValues.documentImagenPost
     ) {
       if (
-        deleteFile([
-          user.dataValues.documentImagenFront,
-          user.dataValues.documentImagenPost,
-        ])
+        deleteFile(user.dataValues.documentImagenFront) &&
+        deleteFile(user.dataValues.documentImagenPost)
       ) {
         user = await initModel.user.update(
           {
@@ -469,7 +468,7 @@ async function updateUserLogin(req, res) {
       where: { id: id },
     });
 
-    let user = await findUserByIdService(id)
+    let user = await findUserByIdService(id);
     if (user) {
       let responses = response(
         "Usuario actualizado exitosamente",
@@ -645,9 +644,13 @@ async function validateEmail(req, res) {
             where: { email: email },
           });
           if (!emailExist) {
-            return response("Email no es de nadie", 200, res, "ok", { email: 2 });
+            return response("Email no es de nadie", 200, res, "ok", {
+              email: 2,
+            });
           }
-          return response("Email esta siendo utilizado", 200, res, "ok", { email: 3 });
+          return response("Email esta siendo utilizado", 200, res, "ok", {
+            email: 3,
+          });
         } else {
           return response("Email no es de nadie", 500, res, "ok", { email: 4 });
         }
@@ -660,13 +663,17 @@ async function validateEmail(req, res) {
         if (!emailExist) {
           return response("Email no es de nadie", 200, res, "ok", { email: 2 });
         }
-        return response("Email esta siendo utilizado", 200, res, "ok", { email: 3 });
+        return response("Email esta siendo utilizado", 200, res, "ok", {
+          email: 3,
+        });
       } else {
         return response("Email no es de nadie", 200, res, "ok", { email: 2 });
       }
     }
   } catch (error) {
-    return response("Ha ocurrido un error interno", 500, res, "ok", { email: 4 });
+    return response("Ha ocurrido un error interno", 500, res, "ok", {
+      email: 4,
+    });
   }
 }
 

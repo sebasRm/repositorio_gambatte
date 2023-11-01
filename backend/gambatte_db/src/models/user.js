@@ -80,11 +80,11 @@ module.exports = function (sequelize, DataTypes) {
       allowNull: true
     },
     documentImagenFront: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(150),
       allowNull: true
     },
     documentImagenPost: {
-      type: DataTypes.STRING(45),
+      type: DataTypes.STRING(150),
       allowNull: true
     },
     indicative: {

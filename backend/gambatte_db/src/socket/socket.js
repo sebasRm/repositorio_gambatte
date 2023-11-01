@@ -51,7 +51,7 @@ export const getAllDepositsAndExpenses = async () => {
         querys.getNotificationsUsers(), { type: sequelize.QueryTypes.SELECT }
       );
       let depositsExpenses = await findDepositAndExpense()
-      //console.log("dataUsers desde el controller", dataUsers);
+      // console.log("dataUsers desde el controller", depositsExpenses);
       io.emit("deposits-expenses", { depositsExpenses });
 
     } catch (error) {

@@ -46,7 +46,7 @@ const validateExtension = async (img, res) => {
             []
           );
         }
-        else{
+        else {
           return resolve(true);
         }
       });
@@ -66,7 +66,7 @@ const uploapFile = async (req, res) => {
   let keysFiles = Object.keys(req.files);
   let keysValues = Object.values(req.files);
 
-  
+
   if (keysFiles.length > 1) {
     for (const keys in keysValues) {
       validateExtension(keysValues[keys], res);
@@ -74,7 +74,7 @@ const uploapFile = async (req, res) => {
     responseData = responseData.replaceAll('""', '","');
     let dataNew = "{" + responseData + "}";
     let data = JSON.parse(dataNew);
-    responseData = ""; 
+    responseData = "";
     if (data) {
       return response(
         'Archivo subido exitosamente',
@@ -87,14 +87,14 @@ const uploapFile = async (req, res) => {
 
 
   } else {
- 
-   // console.log("soy va una imagen ", keysValues[0])
+
+    // console.log("soy va una imagen ", keysValues[0])
     let responses = await validateExtension(keysValues[0], res);
     responseData = responseData.replaceAll('""', '","');
     //console.log("soy va una responseData", responseData)
     let dataNew = "{" + responseData + "}";
     let data = JSON.parse(dataNew);
-   
+
     if (data) {
       return response(
         STATICVAR.USER_UPDATE_AVATAR_SUCCESSFULL,
@@ -119,30 +119,30 @@ function getImageFile(req, res) {
 }
 
 const deleteFile = (file) => {
-  if (file.length > 0) {
-    for (let i = 0; i < file.length; i++) {
-      let pathFIle = `./src/storage/images/${file[i]}`;
-      try {
-        fs.unlinkSync(pathFIle);
-        if (i == file.length) {
-          console.log('Mostrando files', file, file[i]);
-          return true;
-        }
-      } catch (err) {
-        console.error("Something wrong happened removing the file", err);
-        return false;
-      }
-    }
-  } else {
-    let pathFIle = `./src/storage/images/${file}`;
-    try {
-      fs.unlinkSync(pathFIle);
-      return true;
-    } catch (err) {
-      console.error("Something wrong happened removing the file", err);
-      return false;
-    }
+  // if (file.length > 0) {
+  //   for (let i = 0; i < file.length; i++) {
+  //     let pathFIle = `./src/storage/images/${file[i]}`;
+  //     try {
+  //       fs.unlinkSync(pathFIle);
+  //       if (i == file.length) {
+  //         console.log('Mostrando files', file, file[i]);
+  //         return true;
+  //       }
+  //     } catch (err) {
+  //       console.error("Something wrong happened removing the file", err);
+  //       return false;
+  //     }
+  //   }
+  // } else {
+  let pathFIle = `./src/storage/images/${file}`;
+  try {
+    fs.unlinkSync(pathFIle);
+    return true;
+  } catch (err) {
+    console.error("Something wrong happened removing the file", err);
+    return false;
   }
+  // }
 }
 
 // console.log(pathFIle);
