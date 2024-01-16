@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-module.exports = function(sequelize, DataTypes) {
+module.exports = function (sequelize, DataTypes) {
   return sequelize.define('payment', {
     idPayment: {
       autoIncrement: true,
@@ -28,6 +28,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     status: {
+      type: DataTypes.INTEGER,
+      allowNull: true
+    },
+    statusPayment: {
       type: DataTypes.INTEGER,
       allowNull: true
     },

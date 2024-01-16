@@ -12,6 +12,7 @@ const controllerPayment = require('../controllers/paymentAdapter')
 const { uploapFile, getImageFile } = require('../services/uploadServices');
 const { getCountries, getCountryById } = require("../controllers/country");
 const { getFinancialActive, getFinancialFilterActive, getFinancialInit } = require("../controllers/financialDataController");
+const { createActive, findAllActives } = require("../controllers/actives");
 
 const router = express();
 router.use(morgan('dev'));
@@ -76,5 +77,10 @@ router.get('/api/get-google-fianancial-filter-active', getFinancialFilterActive)
 //            =====> RUTAS MODULO PAYMENTS
 router.post('/api/create-payment', controllerPayment.createPayment);
 router.get('/api/get-payments', controllerPayment.findAllPayments);
+router.put('/api/update-payment/:id', controllerPayment.updateActive);
+
+//            =====> RUTAS MODULO ACTIVOS
+router.post('/api/create-active', createActive);
+router.get('/api/get-actives', findAllActives);
 
 module.exports = { router };

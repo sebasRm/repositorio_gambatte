@@ -17,7 +17,7 @@ let port = process.env.PORT;
 const app = express();
 const server = http.createServer(app);
 
-const io = new WebSocketServer(server, { path: "/socket/gambatte", cors: { origin: "*" } });
+const io = new WebSocketServer(server, { path: "/socket/1trader", cors: { origin: "*" } });
 
 
 app.use(express.static(__dirname + '/public'))
@@ -28,9 +28,11 @@ const whitelist = [
 ];
 
 // ✅ Enable pre-flight requests
-app.options("*", cors());
+// app.options("*", cors());
 
+app.use(express.json());
 /*io.on("connection", async (socket) => {
+  
   console.log("conectado al socket...")
   socket.on("conectado", async (mensaje) => {
     console.log("Mensaje : ", mensaje);
@@ -57,22 +59,35 @@ app.options("*", cors());
   }
 });*/
 
-const corsOptions = {
-  credentials: true,
-  origin: (origin, callback) => {
-    if (whitelist.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-};
+// const corsOptions = {
+//   credentials: true,
+//   origin: (origin, callback) => {
+//     if (whitelist.indexOf(origin) !== -1 || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error("Not allowed by CORS"));
+//     }
+//   },
+// };
 
-app.use(cors(corsOptions));
-app.use(express.json());
+// app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Access-Control-Allow-Origin",
+    "Authorization, X-API-KEY, Origin, X-Requested-With, Content-Type, Accept,typepayment, Access-Control-Allow-Request-Method, multipart/form-data"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, DELETE");
+  res.header("Allow", "GET, POST, OPTIONS, PUT, DELETE");
+  next();
+});
+
 app.get("/api/test:userId", accountController);
-app.use("", router);
-app.use("", authSecurity);
+app.use("/1trader", router);
+app.use("/1trader", authSecurity);
 
 const credentials = {
   database: process.env.DATABASE,

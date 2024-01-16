@@ -5,7 +5,7 @@ const response = require("../helpers/utils").response;
 import { promisifyAll } from 'bluebird';
 const CryptoJS = require('crypto-js');
 promisifyAll(jwt);
-
+require('dotenv').config()
 module.exports.authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
   let token;

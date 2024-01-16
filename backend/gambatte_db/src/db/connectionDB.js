@@ -1,12 +1,12 @@
-
+require('dotenv').config()
 const Sequelize = require("sequelize");
 
 let sequelize = new Sequelize(
-    'gambatte_db',
-    'root',
-    'root',
+    process.env.DATABASE_NAME,
+    process.env.USER_NAME_DATABASE,
+    process.env.PASSWORD_USER_DATABASE,
     {
-        host: 'localhost',
+        host: process.env.HOST_NAME_DATABASE,
         dialect: 'mysql'
     }
 )

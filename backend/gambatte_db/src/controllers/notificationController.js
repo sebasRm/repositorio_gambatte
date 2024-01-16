@@ -15,18 +15,18 @@ async function notificationsUsers() {
             model: initModel.deposit,
             as: "deposits",
             attributes: [
-                  'idDeposit',
-                 //
-                 // [sequelize.fn('COUNT', sequelize.col('idDeposit')), 'deposits']
-                  
+              'idDeposit',
+              //
+              // [sequelize.fn('COUNT', sequelize.col('idDeposit')), 'deposits']
 
-                ],
-                group:['deposit.idDeposit'],
+
+            ],
+            group: ['deposit.idDeposit'],
           },
           {
             model: initModel.expenses,
             as: "expenses",
-      
+
           },
         ],
       },
@@ -37,7 +37,7 @@ async function notificationsUsers() {
     console.log("userNotificatios", userNotificatios)
     //return response("Notifications users...", 200, res, "ok", userNotificatios);
   } else {
-   // return response("Error get notifications users ...", 400, res, "false", []);
+    // return response("Error get notifications users ...", 400, res, "false", []);
   }
 }
 module.exports = {

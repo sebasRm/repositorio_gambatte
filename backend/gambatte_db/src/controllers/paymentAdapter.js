@@ -7,9 +7,7 @@ let initModel = initModels(sequelize);
 
 async function createPayment(req, res) {
   try {
-    let statusFalse = 0;
-    let statusActive = 0;
-    let balanceTotal;
+    let totalInvesmentAmount = 0;
     let updateBalance;
     let userUpdate;
     let count = 0;
@@ -41,34 +39,18 @@ async function createPayment(req, res) {
           status: data_actives.payment.status,
           account_idAccount: user.dataValues.account_idaccount,
         });
-        let status = data_actives.payment.status;
-        if (status == false) {
-          statusFalse += data_actives.payment.investmentValue;
-        } else {
-          statusActive += data_actives.payment.total;
-        }
+        totalInvesmentAmount += data_actives.payment.investmentValue;
         count++;
         if (count == actives.length) {
           break;
         }
       }
-      if (statusFalse > statusActive) {
-        balanceTotal = statusFalse - statusActive;
-        let total = {
-          balance: user.dataValues.account_.balance - balanceTotal,
-        };
-        updateBalance = await initModel.account.update(total, {
-          where: { idAccount: user.dataValues.account_idaccount },
-        });
-      } else {
-        balanceTotal = statusActive + statusFalse;
-        let total = {
-          balance: user.dataValues.account_.balance + balanceTotal,
-        };
-        updateBalance = await initModel.account.update(total, {
-          where: { idAccount: user.dataValues.account_idaccount },
-        });
-      }
+      let total = {
+        balance: user.dataValues.account_.balance - totalInvesmentAmount,
+      };
+      updateBalance = await initModel.account.update(total, {
+        where: { idAccount: user.dataValues.account_idaccount },
+      });
       if (updateBalance) {
         userUpdate = await initModel.user.findOne({
           where: { id: req.clientId },
@@ -145,4 +127,100 @@ async function findAllPaymentsById(req, res) {
   }
 }
 
-export { createPayment, findAllPayments };
+const updateActive = async (req, res) => {
+
+  let { id } = req.params
+  let payload = req.body
+  console.log(payload);
+  try {
+    let user = await initModel.user.findOne({
+      where: { id: id },
+      include: [
+        {
+          model: initModel.account,
+          as: "account_",
+        },
+      ],
+    })
+    if (user) {
+      if (payload.statusPayment) {
+        let total = {
+          balance: user.dataValues.account_.balance + payload.total,
+        };
+        let updateBalance = await initModel.account.update(total, {
+          where: { idAccount: user.dataValues.account_idaccount },
+        })
+        if (updateBalance) {
+          let data = { status: payload.status, statusPayment: payload.statusPayment, total: payload.total, result: payload.result }
+          let payment = await initModel.payment.update(data, { where: { idPayment: payload.idPayment } })
+          if (payment) {
+            let userUpdate = await initModel.user.findOne({
+              where: { id: id },
+              include: [
+                {
+                  model: initModel.account,
+                  as: "account_",
+                  include: [
+                    {
+                      model: initModel.payment,
+                      as: "payments",
+                    }
+                  ]
+                },
+              ],
+              attributes: { exclude: ['password'] }
+            });
+            if (userUpdate) {
+              return response(
+                "activos registrados existosamente",
+                201,
+                res,
+                "ok",
+                userUpdate
+              );
+            } else {
+              return response("error al crear los activos", 400, res, "false", []);
+            }
+          }
+        }
+      } else {
+        let data = { status: payload.status, statusPayment: payload.statusPayment, total: payload.total, result: payload.result }
+        let payment = await initModel.payment.update(data, { where: { idPayment: payload.idPayment } })
+        if (payment) {
+          let userUpdate = await initModel.user.findOne({
+            where: { id: id },
+            include: [
+              {
+                model: initModel.account,
+                as: "account_",
+                include: [
+                  {
+                    model: initModel.payment,
+                    as: "payments",
+                  }
+                ]
+              },
+            ],
+            attributes: { exclude: ['password'] }
+          });
+          if (userUpdate) {
+            return response(
+              "activos registrados existosamente",
+              201,
+              res,
+              "ok",
+              userUpdate
+            );
+          } else {
+            return response("error al crear los activos", 400, res, "false", []);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return response("Lo sentimos ha ocurrido un error interno ", 500, res, "false", []);
+  }
+}
+
+export { createPayment, findAllPayments, updateActive };

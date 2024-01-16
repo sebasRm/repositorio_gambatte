@@ -251,9 +251,28 @@ async function userLogout(req, res) {
 async function deleteUserLogin(req, res) {
   try {
     req = req.query;
+    let deleteCards
+    let deleteTransactions
+    let getCards = await initModel.card.findOne({
+      where: { user_login_id: req.id }
+    })
+    if (getCards) {
+      deleteCards = await initModel.card.destroy({
+        where: { user_login_id: req.id }
+      })
+    }
+    let getTransactions = await initModel.transaction.findOne({
+      where: { user_login_id: req.id }
+    })
+    if (getTransactions) {
+      deleteTransactions = await initModel.transaction.destroy({
+        where: { user_login_id: req.id }
+      })
+    }
     const user = await initModel.user.destroy({
       where: { id: req.id },
-    });
+    })
+
     if (user == 1) {
       let responses = response(
         STATICVAR.USER_DELETED_SUCCESSFUL,
@@ -296,7 +315,7 @@ async function updatePasswordUserLogin(req, res) {
     });
     if (user[0] == "1") {
       let responses = response(
-        STATICVAR.USER_UPDATE_SUCCESSFUL,
+        STATICVAR.USER_UPDATE_AVATAR_SUCCESSFULL,
         200,
         res,
         "ok",
@@ -344,8 +363,9 @@ async function updateFile(req, res) {
         );
         if (user[0] == "1") {
           user = await findUserByIdService(idUser);
+          findAllUsersSockets();
           return response(
-            STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL,
+            STATICVAR.USER_UPDATE_AVATAR_SUCCESSFULL,
             200,
             res,
             "ok",
@@ -366,7 +386,7 @@ async function updateFile(req, res) {
       if (user[0] == "1") {
         user = await findUserByIdService(idUser);
         return response(
-          STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL,
+          STATICVAR.USER_UPDATE_AVATAR_SUCCESSFULL,
           200,
           res,
           "ok",
@@ -406,7 +426,7 @@ async function updateFileDocuments(req, res) {
         if (user[0] == "1") {
           user = await findUserByIdService(idUser);
           return response(
-            STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL,
+            STATICVAR.USER_UPDATE_AVATAR_SUCCESSFULL,
             200,
             res,
             "ok",
@@ -429,7 +449,7 @@ async function updateFileDocuments(req, res) {
       if (user[0] == "1") {
         user = await findUserByIdService(idUser);
         return response(
-          STATICVAR.USER_UPDATE_AVATAR_SUCCESSFUL,
+          STATICVAR.USER_UPDATE_AVATAR_SUCCESSFULL,
           200,
           res,
           "ok",

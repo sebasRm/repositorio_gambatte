@@ -1,10 +1,8 @@
 import axios from 'axios';
-
+require('dotenv').config()
 const SerpApi = require('google-search-results-nodejs');
-const search = new SerpApi.GoogleSearch(process.env.APY_KEY_GOOGLE_2);
 
-
-const getDataGoogleService = (param) => {
+const getDataGoogleService = (param, api_key) => {
     const params = {
         engine: "google_finance",
         q: `${param}`
@@ -12,6 +10,7 @@ const getDataGoogleService = (param) => {
 
     return new Promise((resolve, reject) => {
         try {
+            let search = getInstance(api_key)
             search.json(params, (data) => {
                 if (data) {
                     return resolve(data)
@@ -25,10 +24,15 @@ const getDataGoogleService = (param) => {
     })
 }
 
-const getDataGoogleFilterActiveService = (url) => {
+const getInstance = (api_key) => {
+    let search = new SerpApi.GoogleSearch(api_key);
+    return search
+}
+
+const getDataGoogleFilterActiveService = (url, api_key) => {
     // console.log('url ==============> ', url);
     const params = {
-        api_key: process.env.APY_KEY_GOOGLE_1,
+        api_key: api_key,
     };
 
     return new Promise(async (resolve, reject) => {
